@@ -1,23 +1,11 @@
 import {
   Vector,
-  resolveBorderCollision,
-  getRandomArbitrary
+  Container,
+  getRandomArbitrary,
+  getRandomCoordinates,
+  resolveBorderCollision
 } from '../utilities.js';
 import { Circle } from './figures/index.js';
-
-class Container {
-  constructor(width = null, height = null) {
-    this.width = width;
-    this.height = height;
-  }
-
-  get center() {
-    return {
-      width: this.width / 2,
-      height: this.height / 2
-    };
-  }
-}
 
 class Range {
   constructor(min = 0, max = 1) {
@@ -55,16 +43,22 @@ function initialize() {
   for (let index = 0; index < amountOfCircles; index++) {
     const radius = getRandomArbitrary(radiusRange.min, radiusRange.max);
 
-    const x = getRandomArbitrary(radius, container.width - radius);
-    const y = getRandomArbitrary(radius, container.height - radius);
-
     const newSpeedRange = Range.divide(speedRange, radius);
     const speedFromTo = [-newSpeedRange.min, newSpeedRange.max];
 
     const dx = getRandomArbitrary(...speedFromTo);
     const dy = getRandomArbitrary(...speedFromTo);
 
-    const position = new Vector(x, y);
+    const position = getRandomCoordinates(
+      figures,
+      container,
+      radius,
+    );
+
+    if(!position) {
+        break;
+    }
+
     const velocity = new Vector(dx, dy);
 
     figures.push(new Circle(context, position, velocity, radius));

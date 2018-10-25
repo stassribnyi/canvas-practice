@@ -4,6 +4,10 @@ export class Vector {
       this.y = y;
     }
 
+    get length() {
+      return Math.hypot(this.x, this.y);
+    }
+    
     static sum(a, b) {
       if (typeof b === "number") {
         return new Vector(a.x + b, a.y + b);

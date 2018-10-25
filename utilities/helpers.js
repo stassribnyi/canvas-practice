@@ -1,3 +1,6 @@
+import { hasCollision } from './collision-resolver.js';
+import { Vector } from './vector.js';
+
 const { floor, random } = Math;
 
 export function getRandomColor() {
@@ -22,4 +25,34 @@ export function getRandomInt(min, max) {
   const diff = max - min;
 
   return floor(random() * (diff + 1)) + min;
+}
+
+export function getRandomCoordinates(circles, container, radius) {
+  let hasInteractions = false;
+  let position = new Vector(0, 0);
+  let attempt = 0;
+  const maxAttempts = 10000;
+
+  const limits = new Vector(container.width, container.height);
+
+  const { x: maxX, y: maxY } = Vector.subtract(limits, radius);
+
+  let hasAttempts;
+
+  do {
+    hasAttempts = attempt < maxAttempts;
+
+    if (!hasAttempts) {
+      break;
+    }
+
+    position.x = getRandomInt(radius, maxX);
+    position.y = getRandomInt(radius, maxY);
+
+    hasInteractions = hasCollision(circles, radius, position);
+
+    attempt++;
+  } while (hasInteractions);
+
+  return hasAttempts ? position : null;
 }

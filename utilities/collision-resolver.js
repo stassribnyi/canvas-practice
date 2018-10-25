@@ -15,3 +15,15 @@ export function resolveBorderCollision(circle, width, height) {
     velocity.y = -velocity.y;
   }
 }
+
+export function getCollisions(circles, radius, position) {
+  return circles.filter(c => {
+    const positionDiff = Vector.subtract(position, c.position);
+    const distance = positionDiff.length;
+    return distance <= c.radius + radius;
+  });
+}
+
+export function hasCollision(circles, radius, position) {
+  return getCollisions(circles, radius, position).length > 0;
+}
