@@ -26,7 +26,8 @@ let figures = [];
 function initialize() {
   container.width = canvas.width = window.innerWidth;
   container.height = canvas.height = window.innerHeight;
-
+  figures = [];
+  
   const center = container.center;
 
   const position = new Vector(center.width, center.height);

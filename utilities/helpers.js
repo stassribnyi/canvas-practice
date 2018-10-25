@@ -8,6 +8,6 @@ export function getRandomColor() {
   return `#${hexColor}`;
 }
 
-export function isOutOfRange(minValue, maxValue, minRange, maxRange) {
+export function hasIntersections(minValue, maxValue, minRange, maxRange) {
   return minValue <= minRange || maxRange <= maxValue;
 }
