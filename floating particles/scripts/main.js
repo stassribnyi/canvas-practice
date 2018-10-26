@@ -1,4 +1,5 @@
 import {
+  Range,
   Vector,
   Container,
   getCollisions,
@@ -11,21 +12,6 @@ import {
 import { Circle } from './figures/index.js';
 
 import FPSCounter from './fps-counter.js';
-
-class Range {
-  constructor(min = 0, max = 1) {
-    this.min = min;
-    this.max = max;
-  }
-
-  static divide(a, b) {
-    if (typeof b === 'number') {
-      return new Range(a.min / b, a.max / b);
-    }
-
-    return new Range(a.min / b.min, a.max / b.max);
-  }
-}
 
 const settingsIcon = document.querySelector('.settings-icon');
 const settingsModal = document.querySelector('.settings-modal');
@@ -47,9 +33,17 @@ let isSettingsShown = false;
 
 
 window.addEventListener('resize', () => initialize());
-resetButton.addEventListener('click', () => resetSettings());
-applyButton.addEventListener('click', () => applySettings());
+
 settingsIcon.addEventListener('click', () => toggleSettings());
+
+minSpeedElement.addEventListener('input', () => normilizeRange(minSpeedElement, maxSpeedElement));
+maxSpeedElement.addEventListener('input', () => normilizeRange(minSpeedElement, maxSpeedElement, false));
+
+minRadiusElement.addEventListener('input', () => normilizeRange(minRadiusElement, maxRadiusElement));
+maxRadiusElement.addEventListener('input', () => normilizeRange(minRadiusElement, maxRadiusElement, false));
+
+applyButton.addEventListener('click', () => applySettings());
+resetButton.addEventListener('click', () => { resetSettings(); toggleSettings() });
 
 // settings
 const defaultCollide = true;
@@ -77,6 +71,19 @@ function toggleSettings() {
   }
 
   style.visibility = 'visible';
+}
+
+function normilizeRange(minRange, maxRange, isMinChanged = true) {
+  const min = Number(minRange.value);
+  const max = Number(maxRange.value);
+
+  if (isMinChanged && max <= min) {
+    maxRange.value = min;
+  }
+
+  if (!isMinChanged && max <= min) {
+    minRange.value = max;
+  }
 }
 
 function setRangeElement(element, value, minAsDefault = true) {
@@ -165,13 +172,13 @@ function processCircles(circles, circle) {
 
 function animate() {
   requestAnimationFrame(animate);
-  context.font = '12px PressStart2P';
 
   if (isSettingsShown) {
     return;
   }
 
   context.clearRect(0, 0, container.width, container.height);
+  context.font = '12px PressStart2P';
 
   circles.forEach(c => processCircles(circles, c));
   fpsCounter.update();
