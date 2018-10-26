@@ -27,11 +27,16 @@ class Range {
   }
 }
 
+const settingsIcon = document.querySelector('.settings-icon');
+const settingsModal = document.querySelector('.settings-modal');
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
+let isSettingsShown = false;
 
 window.addEventListener('resize', () => initialize());
+settingsIcon.addEventListener('click', () => toggleSettings());
 
 // settings
 const amountOfCircles = 100;
@@ -40,6 +45,20 @@ const speedRange = new Range(10, 60);
 
 let circles = null;
 let fpsCounter = null;
+
+function toggleSettings() {
+  const { style } = settingsModal;
+
+  isSettingsShown = !isSettingsShown;
+
+  if (!isSettingsShown) {
+    style.visibility = 'hidden';
+
+    return;
+  }
+
+  style.visibility = 'visible';
+}
 
 function initialize() {
   container.width = canvas.width = window.innerWidth;
@@ -86,6 +105,10 @@ function processCircles(circles, circle) {
 
 function animate() {
   requestAnimationFrame(animate);
+
+  if (isSettingsShown) {
+    return;
+  }
 
   context.clearRect(0, 0, container.width, container.height);
 
