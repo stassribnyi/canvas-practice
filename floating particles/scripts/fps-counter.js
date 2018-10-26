@@ -19,9 +19,9 @@ export default class FPSCounter {
     }
 
     this.context.fillStyle = '#282c3ea1';
-    this.context.fillRect(25, 16, 44, 20);
+    this.context.fillRect(24, 10, 85, 26);
 
-    this.context.fillStyle = '#f1f1f1';
+    this.context.fillStyle = '#ffeac9';
     this.context.fillText(`${this.framesPerSecond} FPS`, 30, 30);
   }
 

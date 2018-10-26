@@ -1,9 +1,4 @@
 @font-face {
-  font-family: 'Superscript';
-  src: url(../assets/fonts/SUPERSCR.TTF) format('truetype');
-}
-
-@font-face {
   font-family: 'PressStart2P';
   src: url(../assets/fonts/PressStart2P.ttf) format('truetype');
 }
@@ -53,11 +48,13 @@ canvas {
 
   padding: 4px 8px;
 
-  background: #282c3e;
+  background: #273444e8;
   border: 2px solid #ffeac9;
   border-radius: 2px;
 
   width: 300px;
+
+  box-shadow: 3px 3px #ffeac980;
 }
 
 .settings-modal::before {
