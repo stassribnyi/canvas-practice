@@ -97,6 +97,25 @@ canvas {
   width: 128px;
 }
 
+.settings-modal .setting .btn {
+  padding: 4px;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  background: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  border: 2px solid #ffeac9;
+}
+
+.btn.btn-apply:hover {
+  background: #427329;
+}
+
+.btn.btn-reset:hover {
+  background: #732929;
+}
+
 .settings-modal .header {
   margin: 5px auto;
   text-transform: uppercase;
