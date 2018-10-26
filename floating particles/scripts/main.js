@@ -10,6 +10,8 @@ import {
 } from '../utilities.js';
 import { Circle } from './figures/index.js';
 
+import FPSCounter from './fps-counter.js';
+
 class Range {
   constructor(min = 0, max = 1) {
     this.min = min;
@@ -36,7 +38,8 @@ const amountOfCircles = 100;
 const radiusRange = new Range(5, 25);
 const speedRange = new Range(10, 60);
 
-let circles = [];
+let circles = null;
+let fpsCounter = null;
 
 function initialize() {
   container.width = canvas.width = window.innerWidth;
@@ -62,6 +65,8 @@ function initialize() {
 
     circles.push(new Circle(context, position, velocity, radius));
   }
+
+  fpsCounter = new FPSCounter(context);
 }
 
 function processCircles(circles, circle) {
@@ -85,6 +90,7 @@ function animate() {
   context.clearRect(0, 0, container.width, container.height);
 
   circles.forEach(c => processCircles(circles, c));
+  fpsCounter.update();
 }
 
 initialize();
