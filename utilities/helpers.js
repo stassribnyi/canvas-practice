@@ -27,6 +27,10 @@ export function getRandomInt(min, max) {
   return floor(random() * (diff + 1)) + min;
 }
 
+export function getCirclesExcept(circles, circle) {
+  return circles.filter(c => c !== circle);
+}
+
 export function getRandomCoordinates(circles, container, radius) {
   let hasInteractions = false;
   let position = new Vector(0, 0);

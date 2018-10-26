@@ -3,9 +3,13 @@ import { getRandomColor, Vector } from '../../utilities.js';
 export class Circle {
   constructor(context, position, velocity, radius, color = getRandomColor()) {
     this.context = context;
+
     this.position = position;
     this.velocity = velocity;
+
     this.radius = radius;
+    this.mass = radius;
+
     this.color = color;
   }
 

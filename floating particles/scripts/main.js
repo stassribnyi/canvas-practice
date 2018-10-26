@@ -1,9 +1,12 @@
 import {
   Vector,
   Container,
+  getCollisions,
+  getCirclesExcept,
   getRandomArbitrary,
   getRandomCoordinates,
-  resolveBorderCollision
+  resolveBorderCollision,
+  resolveCirclesCollision
 } from '../utilities.js';
 import { Circle } from './figures/index.js';
 
@@ -29,16 +32,16 @@ const container = new Container();
 window.addEventListener('resize', () => initialize());
 
 // settings
-const amountOfCircles = 400;
-const radiusRange = new Range(10, 30);
+const amountOfCircles = 100;
+const radiusRange = new Range(5, 25);
 const speedRange = new Range(10, 60);
 
-let figures = [];
+let circles = [];
 
 function initialize() {
   container.width = canvas.width = window.innerWidth;
   container.height = canvas.height = window.innerHeight;
-  figures = [];
+  circles = [];
 
   for (let index = 0; index < amountOfCircles; index++) {
     const radius = getRandomArbitrary(radiusRange.min, radiusRange.max);
@@ -49,20 +52,31 @@ function initialize() {
     const dx = getRandomArbitrary(...speedFromTo);
     const dy = getRandomArbitrary(...speedFromTo);
 
-    const position = getRandomCoordinates(
-      figures,
-      container,
-      radius,
-    );
+    const position = getRandomCoordinates(circles, container, radius);
 
-    if(!position) {
-        break;
+    if (!position) {
+      break;
     }
 
     const velocity = new Vector(dx, dy);
 
-    figures.push(new Circle(context, position, velocity, radius));
+    circles.push(new Circle(context, position, velocity, radius));
   }
+}
+
+function processCircles(circles, circle) {
+  const { radius, position } = circle;
+  const collisions = getCollisions(
+    getCirclesExcept(circles, circle),
+    radius,
+    position
+  );
+
+  collisions.forEach(colliding => resolveCirclesCollision(circle, colliding));
+
+  resolveBorderCollision(circle, container.width, container.height);
+
+  circle.update();
 }
 
 function animate() {
@@ -70,10 +84,7 @@ function animate() {
 
   context.clearRect(0, 0, container.width, container.height);
 
-  figures.forEach(figure => {
-    figure.update();
-    resolveBorderCollision(figure, container.width, container.height);
-  });
+  circles.forEach(c => processCircles(circles, c));
 }
 
 initialize();
