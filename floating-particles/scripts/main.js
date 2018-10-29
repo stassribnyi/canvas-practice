@@ -31,19 +31,29 @@ const context = canvas.getContext('2d');
 const container = new Container();
 let isSettingsShown = false;
 
-
 window.addEventListener('resize', () => initialize());
 
 settingsIcon.addEventListener('click', () => toggleSettings());
 
-minSpeedElement.addEventListener('input', () => normilizeRange(minSpeedElement, maxSpeedElement));
-maxSpeedElement.addEventListener('input', () => normilizeRange(minSpeedElement, maxSpeedElement, false));
+minSpeedElement.addEventListener('input', () =>
+  normalizeRange(minSpeedElement, maxSpeedElement)
+);
+maxSpeedElement.addEventListener('input', () =>
+  normalizeRange(minSpeedElement, maxSpeedElement, false)
+);
 
-minRadiusElement.addEventListener('input', () => normilizeRange(minRadiusElement, maxRadiusElement));
-maxRadiusElement.addEventListener('input', () => normilizeRange(minRadiusElement, maxRadiusElement, false));
+minRadiusElement.addEventListener('input', () =>
+  normalizeRange(minRadiusElement, maxRadiusElement)
+);
+maxRadiusElement.addEventListener('input', () =>
+  normalizeRange(minRadiusElement, maxRadiusElement, false)
+);
 
 applyButton.addEventListener('click', () => applySettings());
-resetButton.addEventListener('click', () => { resetSettings(); toggleSettings() });
+resetButton.addEventListener('click', () => {
+  resetSettings();
+  toggleSettings();
+});
 
 // settings
 const defaultCollide = true;
@@ -73,7 +83,7 @@ function toggleSettings() {
   style.visibility = 'visible';
 }
 
-function normilizeRange(minRange, maxRange, isMinChanged = true) {
+function normalizeRange(minRange, maxRange, isMinChanged = true) {
   const min = Number(minRange.value);
   const max = Number(maxRange.value);
 
@@ -92,7 +102,7 @@ function setRangeElement(element, value, minAsDefault = true) {
     range = {
       min: 1,
       max: value
-    }
+    };
   }
 
   element.min = range.min;
@@ -114,8 +124,14 @@ function resetSettings() {
 function applySettings() {
   collide = collideElement.checked;
   amountOfCircles = Number(amountElement.value);
-  speedRange = new Range(Number(minSpeedElement.value), Number(maxSpeedElement.value));
-  radiusRange = new Range(Number(minRadiusElement.value), Number(maxRadiusElement.value));
+  speedRange = new Range(
+    Number(minSpeedElement.value),
+    Number(maxSpeedElement.value)
+  );
+  radiusRange = new Range(
+    Number(minRadiusElement.value),
+    Number(maxRadiusElement.value)
+  );
 
   toggleSettings();
   initialize();
@@ -127,10 +143,7 @@ function initialize() {
   circles = [];
 
   for (let index = 0; index < amountOfCircles; index++) {
-    const radius = getRandomArbitrary(
-      radiusRange.min,
-      radiusRange.max
-    );
+    const radius = getRandomArbitrary(radiusRange.min, radiusRange.max);
 
     const newSpeedRange = Range.divide(speedRange, radius);
     const speedFromTo = [-newSpeedRange.min, newSpeedRange.max];
