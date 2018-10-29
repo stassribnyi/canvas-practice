@@ -1,0 +1,9 @@
+@import './main-base.css';
+
+.main {
+  padding: 24px;
+}
+
+.main a {
+  color: inherit;
+}
