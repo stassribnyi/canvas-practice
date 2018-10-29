@@ -24,7 +24,7 @@ resetButton.addEventListener('click', () => {
 });
 
 // settings
-let gravitySettings = new GravitySettings(1, 0.9);
+let gravitySettings = new GravitySettings(0.5, 0.9);
 let particle = null;
 let fpsCounter = null;
 
