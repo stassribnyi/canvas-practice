@@ -1,3 +1,5 @@
+import { Vector } from './vector.js';
+
 export class Container {
   constructor(width = null, height = null) {
     this.width = width;
@@ -5,9 +7,6 @@ export class Container {
   }
 
   get center() {
-    return {
-      width: this.width / 2,
-      height: this.height / 2
-    };
+    return new Vector(this.width / 2, this.height / 2);
   }
 }

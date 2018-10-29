@@ -35,4 +35,8 @@ export class Vector {
 
     return new Vector(a.x * b.x, a.y * b.y);
   }
+
+  static clone(vector) {
+    return new Vector(vector.x, vector.y);
+  }
 }

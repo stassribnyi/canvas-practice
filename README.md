@@ -6,3 +6,7 @@
 ## 1. Floating particles
 
 [Demo](https://stassribnyi.github.io/canvas-learning/floating-particles/)
+
+## 2. Gravity
+
+[Demo](https://stassribnyi.github.io/canvas-learning/gravity/)
