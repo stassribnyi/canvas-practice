@@ -1,5 +1,5 @@
 import { hasCollision } from './collision-resolver.js';
-import { Vector } from './vector.js';
+import { Vector } from '../entities/index.js';
 
 const { floor, random } = Math;
 

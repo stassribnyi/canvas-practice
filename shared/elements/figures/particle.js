@@ -1,4 +1,5 @@
-import { getRandomColor, Vector } from '../../utilities.js';
+import { Vector } from '../../entities/index.js';
+import { getRandomColor } from '../../utilities/index.js';
 
 export class Particle {
   constructor(context, position, velocity, radius, color = getRandomColor()) {

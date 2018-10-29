@@ -1,5 +1,5 @@
 import { hasIntersections } from './helpers.js';
-import { Vector } from './vector.js';
+import { Vector } from '../entities/index.js';
 
 const { cos, sin } = Math;
 

@@ -1,4 +1,4 @@
-export default class FPSCounter {
+export class FPSCounter {
   constructor(context) {
     this.context = context;
     this.prevTime = new Date().getTime();

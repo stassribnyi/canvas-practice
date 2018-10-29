@@ -1,17 +1,16 @@
+import { Range, Vector, Particle, Container, FPSCounter } from '../shared.js';
+
 import {
-  Range,
-  Vector,
-  Container,
   getCollisions,
   getParticlesExcept,
   getRandomArbitrary,
-  getRandomCoordinates,
+  getRandomCoordinates
+} from '../shared.js';
+
+import {
   resolveBorderCollision,
   resolveParticlesCollision
-} from '../utilities.js';
-import { Particle } from './figures/index.js';
-
-import FPSCounter from './fps-counter.js';
+} from '../shared.js';
 
 const settingsIcon = document.querySelector('.settings-icon');
 const settingsModal = document.querySelector('.settings-modal');
