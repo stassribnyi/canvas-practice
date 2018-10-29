@@ -1,3 +1,5 @@
+import { applyGravity, GravitySettings } from '../shared.js';
+
 import { Container, FPSCounter, Particle, Vector } from '../shared.js';
 
 const settingsIcon = document.querySelector('.settings-icon');
@@ -22,6 +24,7 @@ resetButton.addEventListener('click', () => {
 });
 
 // settings
+let gravitySettings = new GravitySettings(1, 0.9);
 let particle = null;
 let fpsCounter = null;
 
@@ -72,6 +75,8 @@ function animate() {
   context.font = '12px PressStart2P';
 
   particle.update();
+  applyGravity(particle, container, gravitySettings);
+
   fpsCounter.update();
 }
 
