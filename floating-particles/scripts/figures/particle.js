@@ -1,6 +1,6 @@
 import { getRandomColor, Vector } from '../../utilities.js';
 
-export class Circle {
+export class Particle {
   constructor(context, position, velocity, radius, color = getRandomColor()) {
     this.context = context;
 

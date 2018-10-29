@@ -27,11 +27,11 @@ export function getRandomInt(min, max) {
   return floor(random() * (diff + 1)) + min;
 }
 
-export function getCirclesExcept(circles, circle) {
-  return circles.filter(c => c !== circle);
+export function getParticlesExcept(particles, particle) {
+  return particles.filter(p => p !== particle);
 }
 
-export function getRandomCoordinates(circles, container, radius) {
+export function getRandomCoordinates(particles, container, radius) {
   let hasInteractions = false;
   let position = new Vector(0, 0);
   let attempt = 0;
@@ -53,7 +53,7 @@ export function getRandomCoordinates(circles, container, radius) {
     position.x = getRandomInt(radius, maxX);
     position.y = getRandomInt(radius, maxY);
 
-    hasInteractions = hasCollision(circles, radius, position);
+    hasInteractions = hasCollision(particles, radius, position);
 
     attempt++;
   } while (hasInteractions);

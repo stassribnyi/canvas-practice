@@ -40,11 +40,11 @@ function getYVelocity(v1, v2, m1, m2, t1, t2, phi) {
   return velocityBase * sin(phi) + velocityEnding;
 }
 
-function pushCirclesApart(p1, p2, m1, m2, r1, r2) {
+function pushParticlesApart(p1, p2, m1, m2, r1, r2) {
   const positionDiff = Vector.subtract(p1, p2);
   const distance = positionDiff.length;
 
-  // minimum translation distance to push circles apart after intersecting
+  // minimum translation distance to push particles apart after intersecting
   const mtd = Vector.multiply(positionDiff, (r1 + r2 - distance) / distance);
 
   const inverseMass1 = 1 / m1;
@@ -61,8 +61,8 @@ function pushCirclesApart(p1, p2, m1, m2, r1, r2) {
   };
 }
 
-export function resolveBorderCollision(circle, width, height) {
-  const { position, velocity, radius } = circle;
+export function resolveBorderCollision(particle, width, height) {
+  const { position, velocity, radius } = particle;
 
   const withRadius = Vector.sum(position, radius);
   const withoutRadius = Vector.subtract(position, radius);
@@ -76,22 +76,22 @@ export function resolveBorderCollision(circle, width, height) {
   }
 }
 
-export function getCollisions(circles, radius, position) {
-  return circles.filter(c => {
-    const positionDiff = Vector.subtract(position, c.position);
+export function getCollisions(particles, radius, position) {
+  return particles.filter(p => {
+    const positionDiff = Vector.subtract(position, p.position);
     const distance = positionDiff.length;
 
-    return distance <= c.radius + radius;
+    return distance <= p.radius + radius;
   });
 }
 
-export function hasCollision(circles, radius, position) {
-  return getCollisions(circles, radius, position).length > 0;
+export function hasCollision(particles, radius, position) {
+  return getCollisions(particles, radius, position).length > 0;
 }
 
-export function resolveCirclesCollision(c1, c2) {
-  const { velocity: v1, position: p1, mass: m1, radius: r1 } = c1;
-  const { velocity: v2, position: p2, mass: m2, radius: r2 } = c2;
+export function resolveParticlesCollision(pt1, pt2) {
+  const { velocity: v1, position: p1, mass: m1, radius: r1 } = pt1;
+  const { velocity: v2, position: p2, mass: m2, radius: r2 } = pt2;
 
   const phi = getPhi(p1, p2);
 
@@ -101,18 +101,18 @@ export function resolveCirclesCollision(c1, c2) {
   const t1 = getTheta(v1);
   const t2 = getTheta(v2);
 
-  c1.velocity = new Vector(
+  pt1.velocity = new Vector(
     getXVelocity(s1, s2, m1, m2, t1, t2, phi),
     getYVelocity(s1, s2, m1, m2, t1, t2, phi)
   );
 
-  c2.velocity = new Vector(
+  pt2.velocity = new Vector(
     getXVelocity(s2, s1, m2, m1, t2, t1, phi),
     getYVelocity(s2, s1, m2, m1, t2, t1, phi)
   );
 
-  const coordinates = pushCirclesApart(p1, p2, m1, m2, r1, r2);
+  const coordinates = pushParticlesApart(p1, p2, m1, m2, r1, r2);
 
-  c1.position = coordinates.p1;
-  c2.position = coordinates.p2;
+  pt1.position = coordinates.p1;
+  pt2.position = coordinates.p2;
 }

@@ -3,13 +3,13 @@ import {
   Vector,
   Container,
   getCollisions,
-  getCirclesExcept,
+  getParticlesExcept,
   getRandomArbitrary,
   getRandomCoordinates,
   resolveBorderCollision,
-  resolveCirclesCollision
+  resolveParticlesCollision
 } from '../utilities.js';
-import { Circle } from './figures/index.js';
+import { Particle } from './figures/index.js';
 
 import FPSCounter from './fps-counter.js';
 
@@ -57,16 +57,16 @@ resetButton.addEventListener('click', () => {
 
 // settings
 const defaultCollide = true;
-const defaultAmountOfCircles = 200;
+const defaultAmountOfParticles = 200;
 const defaultRadiusRange = new Range(5, 25);
 const defaultSpeedRange = new Range(10, 60);
 
 let collide = defaultCollide;
-let amountOfCircles = defaultAmountOfCircles;
+let amountOfParticles = defaultAmountOfParticles;
 let radiusRange = defaultRadiusRange;
 let speedRange = defaultSpeedRange;
 
-let circles = null;
+let particles = null;
 let fpsCounter = null;
 
 function toggleSettings() {
@@ -112,7 +112,7 @@ function setRangeElement(element, value, minAsDefault = true) {
 
 function resetSettings() {
   collideElement.checked = defaultCollide;
-  setRangeElement(amountElement, defaultAmountOfCircles, false);
+  setRangeElement(amountElement, defaultAmountOfParticles, false);
   setRangeElement(minSpeedElement, defaultSpeedRange);
   setRangeElement(maxSpeedElement, defaultSpeedRange, false);
   setRangeElement(minRadiusElement, defaultRadiusRange);
@@ -123,7 +123,7 @@ function resetSettings() {
 
 function applySettings() {
   collide = collideElement.checked;
-  amountOfCircles = Number(amountElement.value);
+  amountOfParticles = Number(amountElement.value);
   speedRange = new Range(
     Number(minSpeedElement.value),
     Number(maxSpeedElement.value)
@@ -140,9 +140,9 @@ function applySettings() {
 function initialize() {
   container.width = canvas.width = window.innerWidth;
   container.height = canvas.height = window.innerHeight;
-  circles = [];
+  particles = [];
 
-  for (let index = 0; index < amountOfCircles; index++) {
+  for (let index = 0; index < amountOfParticles; index++) {
     const radius = getRandomArbitrary(radiusRange.min, radiusRange.max);
 
     const newSpeedRange = Range.divide(speedRange, radius);
@@ -151,7 +151,7 @@ function initialize() {
     const dx = getRandomArbitrary(...speedFromTo);
     const dy = getRandomArbitrary(...speedFromTo);
 
-    const position = getRandomCoordinates(circles, container, radius);
+    const position = getRandomCoordinates(particles, container, radius);
 
     if (!position) {
       break;
@@ -159,28 +159,30 @@ function initialize() {
 
     const velocity = new Vector(dx, dy);
 
-    circles.push(new Circle(context, position, velocity, radius));
+    particles.push(new Particle(context, position, velocity, radius));
   }
 
   fpsCounter = new FPSCounter(context);
 }
 
-function processCircles(circles, circle) {
+function processParticles(particles, particle) {
   if (collide) {
-    const { radius, position } = circle;
+    const { radius, position } = particle;
 
     const collisions = getCollisions(
-      getCirclesExcept(circles, circle),
+      getParticlesExcept(particles, particle),
       radius,
       position
     );
 
-    collisions.forEach(colliding => resolveCirclesCollision(circle, colliding));
+    collisions.forEach(colliding =>
+      resolveParticlesCollision(particle, colliding)
+    );
   }
 
-  resolveBorderCollision(circle, container.width, container.height);
+  resolveBorderCollision(particle, container.width, container.height);
 
-  circle.update();
+  particle.update();
 }
 
 function animate() {
@@ -193,7 +195,7 @@ function animate() {
   context.clearRect(0, 0, container.width, container.height);
   context.font = '12px PressStart2P';
 
-  circles.forEach(c => processCircles(circles, c));
+  particles.forEach(p => processParticles(particles, p));
   fpsCounter.update();
 }
 
