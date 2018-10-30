@@ -179,7 +179,7 @@ function processParticles(particles, particle) {
     );
   }
 
-  resolveBorderCollision(particle, container.width, container.height);
+  resolveBorderCollision(particle, container);
 
   particle.update();
 }

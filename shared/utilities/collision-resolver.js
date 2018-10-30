@@ -61,17 +61,17 @@ function pushParticlesApart(p1, p2, m1, m2, r1, r2) {
   };
 }
 
-export function resolveBorderCollision(particle, width, height) {
+export function resolveBorderCollision(particle, container) {
   const { position, velocity, radius } = particle;
 
   const withRadius = Vector.sum(position, radius);
   const withoutRadius = Vector.subtract(position, radius);
 
-  if (hasIntersections(withoutRadius.x, withRadius.x, 0, width)) {
+  if (hasIntersections(withoutRadius.x, withRadius.x, 0, container.width)) {
     velocity.x = -velocity.x;
   }
 
-  if (hasIntersections(withoutRadius.y, withRadius.y, 0, height)) {
+  if (hasIntersections(withoutRadius.y, withRadius.y, 0, container.height)) {
     velocity.y = -velocity.y;
   }
 }

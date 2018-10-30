@@ -16,8 +16,11 @@ export function applyGravity(particle, container, settings) {
   const withoutRadius = Vector.subtract(position, radius);
 
   if (hasIntersections(withoutRadius.y, withRadius.y, 0, container.height)) {
+    const newVelocity = velocity.y * -bounceFactor;
+    const preventInfinityBouncing = velocity.y + newVelocity < gravity;
+
+    velocity.y = preventInfinityBouncing ? 0 : newVelocity;
     position.y = container.height - radius;
-    velocity.y *= -bounceFactor;    
   } else {
     velocity.y += gravity;
   }
