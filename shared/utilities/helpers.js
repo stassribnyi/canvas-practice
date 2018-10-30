@@ -31,6 +31,20 @@ export function getParticlesExcept(particles, particle) {
   return particles.filter(p => p !== particle);
 }
 
+export function setRangeElement(element, value, minAsDefault = true) {
+  let range = value;
+  if (typeof value === 'number') {
+    range = {
+      min: 1,
+      max: value
+    };
+  }
+
+  element.min = range.min;
+  element.max = range.max;
+  element.value = minAsDefault ? range.min : range.max;
+}
+
 export function getRandomCoordinates(particles, container, radius) {
   let hasInteractions = false;
   let position = new Vector(0, 0);

@@ -1,9 +1,26 @@
-import { applyGravity, GravitySettings } from '../shared.js';
+import {
+  applyGravity,
+  setRangeElement,
+  getRandomArbitrary,
+  getRandomCoordinates
+} from '../shared.js';
 
-import { Container, FPSCounter, Particle, Vector } from '../shared.js';
+import {
+  Range,
+  Vector,
+  Particle,
+  Container,
+  FPSCounter,
+  GravitySettings
+} from '../shared.js';
 
 const settingsIcon = document.querySelector('.settings-icon');
 const settingsModal = document.querySelector('.settings-modal');
+
+const amountElement = settingsModal.querySelector('#amount');
+const bouncingFactorElement = settingsModal.querySelector('#bouncingFactor');
+const gravityEnabledElement = settingsModal.querySelector('#gravityEnabled');
+const accelerationElement = settingsModal.querySelector('#gravityAcceleration');
 
 const resetButton = settingsModal.querySelector('.btn-reset');
 const applyButton = settingsModal.querySelector('.btn-apply');
@@ -24,8 +41,20 @@ resetButton.addEventListener('click', () => {
 });
 
 // settings
-let gravitySettings = new GravitySettings(0.5, 0.8);
-let particle = null;
+const scaleFactor = 100;
+const defaultGravityEnabled = true;
+const defaultAmountOfParticles = 50;
+const defaultBouncingFactor = new Range(10, scaleFactor);
+const defaultAcceleration = new Range(10, scaleFactor);
+
+let amountOfParticles = defaultAmountOfParticles;
+let gravityEnabled = defaultGravityEnabled;
+let gravitySettings = new GravitySettings(
+  defaultAcceleration.max / scaleFactor,
+  defaultBouncingFactor.max / scaleFactor
+);
+
+let particles = null;
 let fpsCounter = null;
 
 function toggleSettings() {
@@ -42,11 +71,31 @@ function toggleSettings() {
   style.visibility = 'visible';
 }
 
+function applyLocalSettings() {
+  gravityEnabled = gravityEnabledElement.checked;
+  amountOfParticles = Number(amountElement.value);
+
+  const bouncingFactor = Number(bouncingFactorElement.value);
+  const acceleration = Number(accelerationElement.value);
+
+  gravitySettings = new GravitySettings(
+    acceleration / scaleFactor,
+    bouncingFactor / scaleFactor
+  );
+}
+
 function resetSettings() {
+  gravityEnabledElement.checked = defaultGravityEnabled;
+  setRangeElement(amountElement, defaultAmountOfParticles, false);
+  setRangeElement(accelerationElement, defaultAcceleration);
+  setRangeElement(bouncingFactorElement, defaultBouncingFactor, false);
+  applyLocalSettings();
+
   initialize();
 }
 
 function applySettings() {
+  applyLocalSettings();
   toggleSettings();
   initialize();
 }
@@ -55,12 +104,19 @@ function initialize() {
   container.width = canvas.width = window.innerWidth;
   container.height = canvas.height = window.innerHeight;
 
-  particle = new Particle(
-    context,
-    Vector.clone(container.center),
-    new Vector(0, 0),
-    10
-  );
+  particles = [];
+
+  for (let index = 0; index < amountOfParticles; index++) {
+    const radius = getRandomArbitrary(5, 25);
+    const position = getRandomCoordinates(particles, container, radius);
+
+    if (!position) {
+      break;
+    }
+
+    particles.push(new Particle(context, position, new Vector(0, 0), radius));
+  }
+
   fpsCounter = new FPSCounter(context);
 }
 
@@ -74,8 +130,13 @@ function animate() {
   context.clearRect(0, 0, container.width, container.height);
   context.font = '12px PressStart2P';
 
-  particle.update();
-  applyGravity(particle, container, gravitySettings);
+  particles.forEach(p => {
+    p.update();
+
+    if (gravityEnabled) {
+      applyGravity(p, container, gravitySettings);
+    }
+  });
 
   fpsCounter.update();
 }

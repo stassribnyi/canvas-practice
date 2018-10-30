@@ -1,3 +1,5 @@
+import { setRangeElement } from '../shared.js';
+
 import { Range, Vector, Particle, Container, FPSCounter } from '../shared.js';
 
 import {
@@ -95,32 +97,7 @@ function normalizeRange(minRange, maxRange, isMinChanged = true) {
   }
 }
 
-function setRangeElement(element, value, minAsDefault = true) {
-  let range = value;
-  if (typeof value === 'number') {
-    range = {
-      min: 1,
-      max: value
-    };
-  }
-
-  element.min = range.min;
-  element.max = range.max;
-  element.value = minAsDefault ? range.min : range.max;
-}
-
-function resetSettings() {
-  collideElement.checked = defaultCollide;
-  setRangeElement(amountElement, defaultAmountOfParticles, false);
-  setRangeElement(minSpeedElement, defaultSpeedRange);
-  setRangeElement(maxSpeedElement, defaultSpeedRange, false);
-  setRangeElement(minRadiusElement, defaultRadiusRange);
-  setRangeElement(maxRadiusElement, defaultRadiusRange, false);
-
-  initialize();
-}
-
-function applySettings() {
+function applyLocalSettings() {
   collide = collideElement.checked;
   amountOfParticles = Number(amountElement.value);
   speedRange = new Range(
@@ -131,7 +108,22 @@ function applySettings() {
     Number(minRadiusElement.value),
     Number(maxRadiusElement.value)
   );
+}
 
+function resetSettings() {
+  collideElement.checked = defaultCollide;
+  setRangeElement(amountElement, defaultAmountOfParticles, false);
+  setRangeElement(minSpeedElement, defaultSpeedRange);
+  setRangeElement(maxSpeedElement, defaultSpeedRange, false);
+  setRangeElement(minRadiusElement, defaultRadiusRange);
+  setRangeElement(maxRadiusElement, defaultRadiusRange, false);
+  applyLocalSettings();
+
+  initialize();
+}
+
+function applySettings() {
+  applyLocalSettings();
   toggleSettings();
   initialize();
 }

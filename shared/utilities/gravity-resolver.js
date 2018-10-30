@@ -1,27 +1,31 @@
 import { hasIntersections } from '../utilities/index.js';
 import { Vector } from '../entities/index.js';
 
+const { round } = Math;
+
 export class GravitySettings {
-  constructor(gravity, bounceFactor) {
-    this.gravity = gravity;
-    this.bounceFactor = bounceFactor;
+  constructor(gravityAcceleration, bouncingFactor) {
+    this.gravityAcceleration = gravityAcceleration;
+    this.bouncingFactor = bouncingFactor;
   }
 }
 
 export function applyGravity(particle, container, settings) {
   const { position, velocity, radius } = particle;
-  const { gravity, bounceFactor } = settings;
+  const { gravityAcceleration, bouncingFactor } = settings;
 
   const withRadius = Vector.sum(position, radius);
   const withoutRadius = Vector.subtract(position, radius);
 
   if (hasIntersections(withoutRadius.y, withRadius.y, 0, container.height)) {
-    const newVelocity = velocity.y * -bounceFactor;
-    const preventInfinityBouncing = velocity.y + newVelocity < gravity;
+    velocity.y = velocity.y * -bouncingFactor;
 
-    velocity.y = preventInfinityBouncing ? 0 : newVelocity;
-    position.y = container.height - radius;
+    // if stuck push to border
+    if (withRadius.y + velocity.y > container.height) {
+      velocity.y = 0;
+      position.y = container.height - radius;
+    }
   } else {
-    velocity.y += gravity;
+    velocity.y = velocity.y + gravityAcceleration;
   }
 }
