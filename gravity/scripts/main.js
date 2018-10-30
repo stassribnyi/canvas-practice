@@ -127,8 +127,9 @@ function animate() {
     return;
   }
 
-  context.clearRect(0, 0, container.width, container.height);
   context.font = '12px PressStart2P';
+  context.fillStyle = 'rgba(40,44,62, 0.25)';
+  context.fillRect(0, 0, container.width, container.height);
 
   particles.forEach(p => {
     p.update();
