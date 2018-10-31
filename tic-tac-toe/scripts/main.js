@@ -9,8 +9,8 @@ const context = canvas.getContext('2d');
 const container = new Container();
 
 window.addEventListener('resize', () => initialize());
-window.addEventListener('click', event => makeTurn(event));
-window.addEventListener('touchstart', event => makeTurn(event));
+window.addEventListener('click', event => makeTurn(event.x, event.y));
+window.addEventListener('touchstart', event => makeTurn(event.pageX, event.pageY));
 
 class Line {
   constructor(start, end) {
@@ -202,8 +202,8 @@ function initialize() {
   fpsCounter = new FPSCounter(context);
 }
 
-function makeTurn({ clientX, clientY }) {
-  const clicked = game.cells.find(cell => cell.contains(new Vector(clientX, clientY)));
+function makeTurn(x, y) {
+  const clicked = game.cells.find(cell => cell.contains(new Vector(x, y)));
 
   if (clicked) {
     clicked.state = clicked.state !== States.XSet ? States.XSet : States.OSet;
