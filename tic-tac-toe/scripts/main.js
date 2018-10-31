@@ -1,15 +1,15 @@
 import { Container, FPSCounter, Vector } from '../shared.js';
 
-var img = new Image();
-img.addEventListener('load', () => {}, false);
-img.src = '../../assets/tic-tac-toe.png';
+const image = new Image();
+image.addEventListener('load', () => {}, false);
+image.src = '../../assets/tic-tac-toe.png';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
-const themeColor = '#ffeac9';
 
 window.addEventListener('resize', () => initialize());
+window.addEventListener('click', e => makeTurn(e));
 
 class Line {
   constructor(start, end) {
@@ -39,12 +39,62 @@ class Cell {
     this.state = States.Unset;
     this.context = context;
     this.position = position;
+
+    this.tileSize = 111;
+    this.scaleFactor = 0.8;
+    this.xTile = new Vector(0, 0);
+    this.oTile = new Vector(113, 0);
+  }
+
+  getTile() {
+    switch (this.state) {
+      case States.OSet:
+        return this.oTile;
+      case States.XSet:
+        return this.xTile;
+      default:
+        return null;
+    }
+  }
+
+  contains(point) {
+    const shift = (this.width - this.width * this.scaleFactor) / 2;
+    const { x, y } = Vector.sum(this.position, shift);
+    const { x: px, y: py } = point;
+    const scaledWidth = this.width * this.scaleFactor;
+    const scaledHeight = this.height * this.scaleFactor;
+
+    const isWithinXArea = x <= px && px <= x + scaledHeight;
+    const isWithinYArea = y <= py && py <= y + scaledWidth;
+
+    return isWithinXArea && isWithinYArea;
   }
 
   draw() {
-    const { x, y } = this.position;
+    const tile = this.getTile();
+    if (!tile) {
+      return;
+    }
 
-    this.context.drawImage(img, 113, 0, 112, 112, x, y, this.width, this.width);
+    const shift = (this.width - this.width * this.scaleFactor) / 2;
+    const { x, y } = Vector.sum(this.position, shift);
+
+    const scaledWidth = this.width * this.scaleFactor;
+    const scaledHeight = this.height * this.scaleFactor;
+
+    const options = [
+      image,
+      tile.x,
+      tile.y,
+      this.tileSize,
+      this.tileSize,
+      x,
+      y,
+      scaledWidth,
+      scaledHeight
+    ];
+
+    this.context.drawImage(...options);
   }
 
   update() {
@@ -106,7 +156,7 @@ class TicTacToeGame {
 
   drawLine(from, to) {
     this.context.lineWidth = this.cellSize / 20;
-    this.context.strokeStyle = 'green';
+    this.context.strokeStyle = '#37ad83';
 
     this.context.beginPath();
     this.context.moveTo(from.x, from.y);
@@ -151,6 +201,14 @@ function initialize() {
 
   game = new TicTacToeGame(context, start, fieldSize, cellSize);
   fpsCounter = new FPSCounter(context);
+}
+
+function makeTurn({ x, y }) {
+  const clicked = game.cells.find(cell => cell.contains(new Vector(x, y)));
+
+  if (clicked) {
+    clicked.state = clicked.state !== States.XSet ? States.XSet : States.OSet;
+  }
 }
 
 function animate() {
