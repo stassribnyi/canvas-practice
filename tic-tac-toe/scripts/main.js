@@ -202,8 +202,8 @@ function initialize() {
   fpsCounter = new FPSCounter(context);
 }
 
-function makeTurn({ x, y }) {
-  const clicked = game.cells.find(cell => cell.contains(new Vector(x, y)));
+function makeTurn({ clientX, clientY }) {
+  const clicked = game.cells.find(cell => cell.contains(new Vector(clientX, clientY)));
 
   if (clicked) {
     clicked.state = clicked.state !== States.XSet ? States.XSet : States.OSet;
