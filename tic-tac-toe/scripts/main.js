@@ -34,16 +34,21 @@ class States {
 
 class Cell {
   constructor(context, position, width, height) {
-    this.width = width;
-    this.height = height;
-    this.state = States.Unset;
     this.context = context;
-    this.position = position;
+    this.state = States.Unset;
 
     this.tileSize = 111;
     this.scaleFactor = 0.8;
     this.xTile = new Vector(0, 0);
     this.oTile = new Vector(113, 0);
+
+    const shiftX = (width - width * this.scaleFactor) / 2;
+    const shiftY = (height - height * this.scaleFactor) / 2;
+
+    this.position = Vector.sum(position, new Vector(shiftX, shiftY));
+
+    this.width = width * this.scaleFactor;
+    this.height = height * this.scaleFactor;
   }
 
   getTile() {
@@ -58,14 +63,11 @@ class Cell {
   }
 
   contains(point) {
-    const shift = (this.width - this.width * this.scaleFactor) / 2;
-    const { x, y } = Vector.sum(this.position, shift);
+    const { x, y } = this.position;
     const { x: px, y: py } = point;
-    const scaledWidth = this.width * this.scaleFactor;
-    const scaledHeight = this.height * this.scaleFactor;
 
-    const isWithinXArea = x <= px && px <= x + scaledHeight;
-    const isWithinYArea = y <= py && py <= y + scaledWidth;
+    const isWithinXArea = x <= px && px <= x + this.width;
+    const isWithinYArea = y <= py && py <= y + this.height;
 
     return isWithinXArea && isWithinYArea;
   }
@@ -76,11 +78,7 @@ class Cell {
       return;
     }
 
-    const shift = (this.width - this.width * this.scaleFactor) / 2;
-    const { x, y } = Vector.sum(this.position, shift);
-
-    const scaledWidth = this.width * this.scaleFactor;
-    const scaledHeight = this.height * this.scaleFactor;
+    const { x, y } = this.position;
 
     const options = [
       image,
@@ -90,8 +88,8 @@ class Cell {
       this.tileSize,
       x,
       y,
-      scaledWidth,
-      scaledHeight
+      this.width,
+      this.height
     ];
 
     this.context.drawImage(...options);
