@@ -10,7 +10,7 @@ const container = new Container();
 
 window.addEventListener('resize', () => initialize());
 window.addEventListener('click', event => makeTurn(event));
-window.addEventListener('touchend', event => makeTurn(event));
+window.addEventListener('touchstart', event => makeTurn(event));
 
 class Line {
   constructor(start, end) {
