@@ -18,7 +18,7 @@ export class FPSCounter {
       this.counter++;
     }
 
-    this.context.fillStyle = '#282c3ea1';
+    this.context.fillStyle = 'rgba(40, 44, 62, 0.63)';
     this.context.fillRect(24, 10, 85, 26);
 
     this.context.fillStyle = '#ffeac9';
