@@ -1,8 +1,13 @@
 import { Container, FPSCounter, Vector } from '../shared.js';
 
+var img = new Image();
+img.addEventListener('load', () => {}, false);
+img.src = '../../assets/tic-tac-toe.png';
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
+const themeColor = '#ffeac9';
 
 window.addEventListener('resize', () => initialize());
 
@@ -10,6 +15,40 @@ class Line {
   constructor(start, end) {
     this.start = start;
     this.end = end;
+  }
+}
+
+class States {
+  static get Unset() {
+    return 'unSet';
+  }
+
+  static get XSet() {
+    return 'xSet';
+  }
+
+  static get OSet() {
+    return 'oSet';
+  }
+}
+
+class Cell {
+  constructor(context, position, width, height) {
+    this.width = width;
+    this.height = height;
+    this.state = States.Unset;
+    this.context = context;
+    this.position = position;
+  }
+
+  draw() {
+    const { x, y } = this.position;
+
+    this.context.drawImage(img, 113, 0, 112, 112, x, y, this.width, this.width);
+  }
+
+  update() {
+    this.draw();
   }
 }
 
@@ -23,7 +62,7 @@ class TicTacToeGame {
     this.reset();
   }
 
-  reset() {
+  buildFieldLines() {
     this.verticalLines = [];
     this.horizontalLines = [];
 
@@ -46,10 +85,29 @@ class TicTacToeGame {
     }
   }
 
+  buildFieldCells() {
+    this.cells = [];
+
+    const cellSize = this.cellSize;
+
+    for (let y = 0; y < this.fieldSize; y++) {
+      for (let x = 0; x < this.fieldSize; x++) {
+        const cellPosition = Vector.sum(
+          this.position,
+          new Vector(x * cellSize, y * cellSize)
+        );
+
+        const cell = new Cell(this.context, cellPosition, cellSize, cellSize);
+
+        this.cells.push(cell);
+      }
+    }
+  }
+
   drawLine(from, to) {
     this.context.lineWidth = this.cellSize / 20;
-    this.context.strokeStyle = '#ffeac9';
-    
+    this.context.strokeStyle = 'green';
+
     this.context.beginPath();
     this.context.moveTo(from.x, from.y);
     this.context.lineTo(to.x, to.y);
@@ -66,8 +124,15 @@ class TicTacToeGame {
     }
   }
 
+  reset() {
+    this.buildFieldLines();
+    this.buildFieldCells();
+  }
+
   update() {
     this.draw();
+
+    this.cells.forEach(c => c.update());
   }
 }
 
