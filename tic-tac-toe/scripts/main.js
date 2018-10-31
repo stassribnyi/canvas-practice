@@ -9,7 +9,8 @@ const context = canvas.getContext('2d');
 const container = new Container();
 
 window.addEventListener('resize', () => initialize());
-window.addEventListener('click', e => makeTurn(e));
+window.addEventListener('click', event => makeTurn(event));
+window.addEventListener('touchend', event => makeTurn(event));
 
 class Line {
   constructor(start, end) {
