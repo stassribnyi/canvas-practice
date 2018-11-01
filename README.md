@@ -10,3 +10,7 @@
 ## 2. Gravity
 
 [Demo](https://stassribnyi.github.io/canvas-learning/gravity/)
+
+## 3. Tic-Tac-Toe
+
+[Demo](https://stassribnyi.github.io/canvas-learning/tic-tac-toe/)
