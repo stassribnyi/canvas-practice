@@ -7,9 +7,11 @@ image.src = './assets/tic-tac-toe.png';
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
+let mousePosition = new Vector();
 
 window.addEventListener('resize', () => initialize());
 window.addEventListener('click', event => makeTurn(event.x, event.y));
+window.addEventListener('mousemove', event => updateMousePosition(event));
 
 class Line {
   constructor(start, end) {
@@ -49,6 +51,8 @@ class Cell {
 
     this.width = width * this.scaleFactor;
     this.height = height * this.scaleFactor;
+
+    this.isHovered = false;
   }
 
   getTile() {
@@ -73,12 +77,17 @@ class Cell {
   }
 
   draw() {
+    const { x, y } = this.position;
+
+    if (this.isHovered) {
+      this.context.fillStyle = '#424a6d78';
+      this.context.fillRect(x, y, this.width, this.height);
+    }
+
     const tile = this.getTile();
     if (!tile) {
       return;
     }
-
-    const { x, y } = this.position;
 
     const options = [
       image,
@@ -93,6 +102,14 @@ class Cell {
     ];
 
     this.context.drawImage(...options);
+  }
+
+  hoverIn() {
+    this.isHovered = true;
+  }
+
+  hoverOut() {
+    this.isHovered = false;
   }
 
   update() {
@@ -209,11 +226,19 @@ function makeTurn(x, y) {
   }
 }
 
+function updateMousePosition({ x, y }) {
+  mousePosition = new Vector(x, y);
+}
+
 function animate() {
   requestAnimationFrame(animate);
 
   context.clearRect(0, 0, container.width, container.height);
   context.font = '12px PressStart2P';
+
+  game.cells.forEach(
+    cell => (cell.contains(mousePosition) ? cell.hoverIn() : cell.hoverOut())
+  );
 
   game.update();
   fpsCounter.update();
