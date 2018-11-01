@@ -2,6 +2,8 @@ import { Container, FPSCounter, Vector } from '../shared.js';
 
 import { TicTacToeGame } from './game/game.js';
 
+const isTouchScreen = 'ontouchstart' in document.documentElement;
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
@@ -36,6 +38,10 @@ function clicked(x, y) {
 }
 
 function moved(x, y) {
+  if (isTouchScreen) {
+    return;
+  }
+
   const position = new Vector(x, y);
   const { style } = canvas;
 

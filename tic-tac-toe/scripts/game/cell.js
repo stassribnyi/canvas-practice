@@ -65,8 +65,12 @@ export class Cell {
     const { x, y } = this.position;
 
     if (this.isHovered) {
+      const oldFillStyle = this.context.fillStyle;
+      
       this.context.fillStyle = '#424a6d78';
       this.context.fillRect(x, y, this.width, this.height);
+
+      this.fillStyle = oldFillStyle;
     }
 
     const tile = this.getTile();
