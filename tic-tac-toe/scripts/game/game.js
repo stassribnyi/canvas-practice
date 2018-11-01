@@ -126,6 +126,13 @@ export class TicTacToeGame {
     return line.every(cell => cell.state === state);
   }
 
+  someLineCrossedBy(lines) {
+    return {
+      crosses: lines.some(line => this.checkLine(line, CellState.XSet)),
+      noughts: lines.some(line => this.checkLine(line, CellState.OSet))
+    };
+  }
+
   checkWinner() {
     let isXWinner = false;
     let isOWinner = false;
@@ -155,12 +162,9 @@ export class TicTacToeGame {
         row.push(rowCell);
       }
 
-      isXWinner =
-        this.checkLine(row, CellState.XSet) ||
-        this.checkLine(column, CellState.XSet);
-      isOWinner =
-        this.checkLine(row, CellState.OSet) ||
-        this.checkLine(column, CellState.OSet);
+      const crossedBy = this.someLineCrossedBy([row, column]);
+      isXWinner = crossedBy.crosses;
+      isOWinner = crossedBy.noughts;
 
       if (isXWinner || isOWinner) {
         break;
@@ -168,12 +172,9 @@ export class TicTacToeGame {
     }
 
     if (!isXWinner && !isOWinner) {
-      isXWinner =
-        this.checkLine(diagonal, CellState.XSet) ||
-        this.checkLine(counterDiagonal, CellState.XSet);
-      isOWinner =
-        this.checkLine(diagonal, CellState.OSet) ||
-        this.checkLine(counterDiagonal, CellState.OSet);
+      const crossedBy = this.someLineCrossedBy([diagonal, counterDiagonal]);
+      isXWinner = crossedBy.crosses;
+      isOWinner = crossedBy.noughts;
     }
 
     if (isXWinner || isOWinner) {

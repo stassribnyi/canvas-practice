@@ -1,14 +1,13 @@
 import { Container, FPSCounter, Vector } from '../shared.js';
 
 import { GameState, TicTacToeGame } from './game/game.js';
-import { CellState } from './game/cell.js';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
 
 window.addEventListener('resize', () => initialize());
-window.addEventListener('click', event => makeTurn(event.x, event.y));
+window.addEventListener('click', ({ x, y }) => makeTurn(x, y));
 window.addEventListener('mousemove', event => hoverCell(event));
 
 let fpsCounter = null;
