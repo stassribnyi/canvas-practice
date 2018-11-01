@@ -67,7 +67,7 @@ export class Cell {
     if (this.isHovered) {
       const oldFillStyle = this.context.fillStyle;
       
-      this.context.fillStyle = '#424a6d78';
+      this.context.fillStyle = 'rgba(66, 74, 109, 0.47)';
       this.context.fillRect(x, y, this.width, this.height);
 
       this.fillStyle = oldFillStyle;
