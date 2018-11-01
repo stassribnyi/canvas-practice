@@ -209,7 +209,11 @@ function initialize() {
   container.height = canvas.height = window.innerHeight;
 
   const fieldSize = 3;
-  const cellSize = container.height / fieldSize / 1.5;
+
+  const availableSpace =
+    container.height > container.width ? container.width : container.height;
+    
+  const cellSize = availableSpace / fieldSize / 1.5;
 
   const fieldLength = cellSize * fieldSize;
   const start = Vector.subtract(container.center, fieldLength / 2);
