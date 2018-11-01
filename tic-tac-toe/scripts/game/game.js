@@ -34,11 +34,11 @@ export class TicTacToeGame {
   }
 
   get letterLength() {
-    return 7;
+    return 6;
   }
 
   get upperCaseFactor() {
-    return 1.5;
+    return 2;
   }
 
   get letterHight() {
@@ -61,7 +61,7 @@ export class TicTacToeGame {
     const stateShift = middle - this.state.length * this.letterLength;
     const resetShift = middle - resetLabel.length * this.letterLength;
 
-    const infoPosition = new Vector(x + stateShift, y);
+    const infoPosition = new Vector(x + stateShift, y - this.context.lineWidth * 2);
 
     const lineWidthShift = this.context.lineWidth * 4;
 
