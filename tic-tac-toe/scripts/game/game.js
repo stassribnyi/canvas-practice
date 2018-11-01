@@ -1,25 +1,25 @@
-import { Vector, Line } from '../../shared.js';
+import { Vector, Line, TextControl } from '../../shared.js';
 import { Cell, CellState } from './cell.js';
 
 export class GameState {
   static get XWin() {
-    return 'xWin';
+    return 'X Win!';
   }
 
   static get OWin() {
-    return 'oWin';
+    return '0 Win!';
   }
 
-  static get DeadHeat() {
-    return 'deadHeat';
+  static get Draw() {
+    return 'Draw!';
   }
 
   static get XTurn() {
-    return 'xTurn';
+    return 'X Turn';
   }
 
   static get OTurn() {
-    return 'oTurn';
+    return '0 Turn';
   }
 }
 
@@ -31,6 +31,60 @@ export class TicTacToeGame {
     this.cellSize = cellSize;
 
     this.reset();
+  }
+
+  get letterLength() {
+    return 7;
+  }
+
+  get upperCaseFactor() {
+    return 1.5;
+  }
+
+  get letterHight() {
+    return this.letterLength * 2;
+  }
+
+  buildControls() {
+    this.resetControl = null;
+    this.infoControl = null;
+    const resetLabel = 'RESET';
+
+    const { x, y } = this.position;
+    const length = this.cellSize * this.fieldSize;
+    const middle = length / 2;
+
+    const stateWordLength = this.state.length * this.letterLength;
+    const resetWordLength =
+      resetLabel.length * this.letterLength * this.upperCaseFactor;
+
+    const stateShift = middle - this.state.length * this.letterLength;
+    const resetShift = middle - resetLabel.length * this.letterLength;
+
+    const infoPosition = new Vector(x + stateShift, y);
+
+    const lineWidthShift = this.context.lineWidth * 4;
+
+    const resetPosition = new Vector(
+      x + resetShift,
+      y + length + lineWidthShift
+    );
+
+    this.resetControl = new TextControl(
+      this.context,
+      resetLabel,
+      resetPosition,
+      resetWordLength,
+      this.letterHight * this.upperCaseFactor
+    );
+
+    this.infoControl = new TextControl(
+      this.context,
+      this.state,
+      infoPosition,
+      stateWordLength,
+      this.letterHight
+    );
   }
 
   buildFieldLines() {
@@ -76,7 +130,6 @@ export class TicTacToeGame {
   }
 
   drawLine(from, to) {
-    this.context.lineWidth = this.cellSize / 20;
     this.context.strokeStyle = '#37ad83';
 
     this.context.beginPath();
@@ -93,15 +146,48 @@ export class TicTacToeGame {
       this.drawLine(vl.start, vl.end);
       this.drawLine(hl.start, hl.end);
     }
+
+    this.infoControl.update(this.state);
+    this.resetControl.update();
+  }
+
+  canCellBeClicked(cell, position) {
+    return cell.state === CellState.Unset && cell.contains(position);
+  }
+
+  canBeClicked(position) {
+    const isAboveCell = this.cells.some(cell =>
+      this.canCellBeClicked(cell, position)
+    );
+    const isAboveReset = this.resetControl.contains(position);
+
+    return isAboveCell || isAboveReset;
   }
 
   hoverCell(position) {
     this.cells.forEach(
-      cell => (cell.contains(position) ? cell.hoverIn() : cell.hoverOut())
+      cell =>
+        this.canCellBeClicked(cell, position) ? cell.hoverIn() : cell.hoverOut()
     );
   }
 
+  handleClick(position) {
+    const resetClicked = this.resetControl.contains(position);
+
+    if (resetClicked) {
+      this.reset();
+
+      return;
+    }
+
+    this.makeTurn(position);
+  }
+
   makeTurn(position) {
+    if (this.state !== GameState.XTurn && this.state !== GameState.OTurn) {
+      return;
+    }
+
     const clicked = this.cells.find(cell => cell.contains(position));
 
     if (clicked && clicked.state === CellState.Unset) {
@@ -112,14 +198,16 @@ export class TicTacToeGame {
       this.state = isXTurn ? GameState.OTurn : GameState.XTurn;
     }
 
-    return this.checkWinner();
+    this.checkWinner();
   }
 
   reset() {
+    this.context.lineWidth = this.cellSize / 20;
+    this.state = GameState.XTurn;
+
     this.buildFieldLines();
     this.buildFieldCells();
-
-    this.state = GameState.XTurn;
+    this.buildControls();
   }
 
   checkLine(line, state) {
@@ -178,14 +266,10 @@ export class TicTacToeGame {
     }
 
     if (isXWinner || isOWinner) {
-      return isXWinner ? GameState.XWin : GameState.OWin;
+      this.state = isXWinner ? GameState.XWin : GameState.OWin;
+    } else if (this.cells.every(cell => cell.state !== CellState.Unset)) {
+      this.state = GameState.Draw;
     }
-
-    if (this.cells.every(cell => cell.state !== CellState.Unset)) {
-      return GameState.DeadHeat;
-    }
-
-    return GameState.Playing;
   }
 
   update() {

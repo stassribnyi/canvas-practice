@@ -1,14 +1,14 @@
 import { Container, FPSCounter, Vector } from '../shared.js';
 
-import { GameState, TicTacToeGame } from './game/game.js';
+import { TicTacToeGame } from './game/game.js';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const container = new Container();
 
 window.addEventListener('resize', () => initialize());
-window.addEventListener('click', ({ x, y }) => makeTurn(x, y));
-window.addEventListener('mousemove', event => hoverCell(event));
+window.addEventListener('click', ({ x, y }) => clicked(x, y));
+window.addEventListener('mousemove', ({ x, y }) => moved(x, y));
 
 let fpsCounter = null;
 let game = null;
@@ -31,28 +31,17 @@ function initialize() {
   fpsCounter = new FPSCounter(context);
 }
 
-let firstPlayerTurn = true;
-
-function makeTurn(x, y) {
-  const position = new Vector(x, y);
-
-  const state = game.makeTurn(position);
-
-  if (state === GameState.XWin || state === GameState.OWin) {
-    if (confirm(state === GameState.XWin ? 'X Won' : '0 Won')) {
-      game.reset();
-    }
-  }
-
-  if (state === GameState.DeadHeat) {
-    if (confirm('dead heat')) {
-      game.reset();
-    }
-  }
+function clicked(x, y) {
+  game.handleClick(new Vector(x, y));
 }
 
-function hoverCell({ x, y }) {
-  game.hoverCell(new Vector(x, y));
+function moved(x, y) {
+  const position = new Vector(x, y);
+  const { style } = canvas;
+
+  style.cursor = game.canBeClicked(position) ? 'pointer' : 'default';
+
+  game.hoverCell(position);
 }
 
 function animate() {

@@ -1,3 +1,5 @@
+import { isPointWithinRectangle } from '../../shared.js';
+
 import { Vector } from '../../shared.js';
 
 const image = new Image();
@@ -51,13 +53,12 @@ export class Cell {
   }
 
   contains(point) {
-    const { x, y } = this.position;
-    const { x: px, y: py } = point;
-
-    const isWithinXArea = x <= px && px <= x + this.width;
-    const isWithinYArea = y <= py && py <= y + this.height;
-
-    return isWithinXArea && isWithinYArea;
+    return isPointWithinRectangle(
+      this.position,
+      point,
+      this.height,
+      this.width
+    );
   }
 
   draw() {

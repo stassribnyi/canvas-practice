@@ -11,7 +11,7 @@ export function getRandomColor() {
   return `#${hexColor}`;
 }
 
-export function hasIntersections(minValue, maxValue, minRange, maxRange) {  
+export function hasIntersections(minValue, maxValue, minRange, maxRange) {
   return minValue <= minRange || maxRange <= maxValue;
 }
 
@@ -43,6 +43,16 @@ export function setRangeElement(element, value, minAsDefault = true) {
   element.min = range.min;
   element.max = range.max;
   element.value = minAsDefault ? range.min : range.max;
+}
+
+export function isPointWithinRectangle(position, point, width, height) {
+  const { x, y } = position;
+  const { x: px, y: py } = point;
+
+  const isWithinXArea = x <= px && px <= x + width;
+  const isWithinYArea = y <= py && py <= y + height;
+
+  return isWithinXArea && isWithinYArea;
 }
 
 export function getRandomCoordinates(particles, container, radius) {
