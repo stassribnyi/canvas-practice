@@ -35,26 +35,20 @@ function initialize() {
 let firstPlayerTurn = true;
 
 function makeTurn(x, y) {
-  const clicked = game.cells.find(cell => cell.contains(new Vector(x, y)));
+  const position = new Vector(x, y);
 
-  if (clicked && clicked.state === CellState.Unset) {
-    clicked.state = firstPlayerTurn ? CellState.XSet : CellState.OSet;
+  const state = game.makeTurn(position);
 
-    const state = game.checkWinner();
-
-    if (state === GameState.XWin || state === GameState.OWin) {
-      if (confirm(state === GameState.XWin ? 'X Won' : '0 Won')) {
-        game.reset();
-      }
+  if (state === GameState.XWin || state === GameState.OWin) {
+    if (confirm(state === GameState.XWin ? 'X Won' : '0 Won')) {
+      game.reset();
     }
+  }
 
-    if (state === GameState.DeadHeat) {
-      if (confirm('dead heat')) {
-        game.reset();
-      }
+  if (state === GameState.DeadHeat) {
+    if (confirm('dead heat')) {
+      game.reset();
     }
-
-    firstPlayerTurn = !firstPlayerTurn;
   }
 }
 

@@ -14,8 +14,12 @@ export class GameState {
     return 'deadHeat';
   }
 
-  static get Playing() {
-    return 'playing';
+  static get XTurn() {
+    return 'xTurn';
+  }
+
+  static get OTurn() {
+    return 'oTurn';
   }
 }
 
@@ -97,9 +101,25 @@ export class TicTacToeGame {
     );
   }
 
+  makeTurn(position) {
+    const clicked = this.cells.find(cell => cell.contains(position));
+
+    if (clicked && clicked.state === CellState.Unset) {
+      const isXTurn = this.state === GameState.XTurn;
+
+      clicked.state = isXTurn ? CellState.XSet : CellState.OSet;
+
+      this.state = isXTurn ? GameState.OTurn : GameState.XTurn;
+    }
+
+    return this.checkWinner();
+  }
+
   reset() {
     this.buildFieldLines();
     this.buildFieldCells();
+
+    this.state = GameState.XTurn;
   }
 
   checkLine(line, state) {
@@ -161,7 +181,7 @@ export class TicTacToeGame {
     }
 
     if (this.cells.every(cell => cell.state !== CellState.Unset)) {
-      return GameState.GameState;
+      return GameState.DeadHeat;
     }
 
     return GameState.Playing;
