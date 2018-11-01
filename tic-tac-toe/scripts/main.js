@@ -2,7 +2,7 @@ import { Container, FPSCounter, Vector } from '../shared.js';
 
 const image = new Image();
 image.addEventListener('load', () => {}, false);
-image.src = '../../assets/tic-tac-toe.png';
+image.src = './assets/tic-tac-toe.png';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
@@ -10,7 +10,7 @@ const container = new Container();
 
 window.addEventListener('resize', () => initialize());
 window.addEventListener('click', event => makeTurn(event.x, event.y));
-window.addEventListener('touchstart', event => makeTurn(event.touches[0].clientX, event.touches[0].clientY));
+// window.addEventListener('touchstart', event => makeTurn(event.touches[0].clientX, event.touches[0].clientY));
 
 class Line {
   constructor(start, end) {
