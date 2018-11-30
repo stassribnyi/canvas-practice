@@ -1,20 +1,63 @@
 import { SnakeGame } from './game/index.js';
 import { Position } from '../../shared/index.js';
 
-window.addEventListener('resize', () => expand());
+let loaded = false;
 
-const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
+window.addEventListener('resize', () => expand());
+window.addEventListener('load', () => {
+  loaded = true;
+  init();
+});
+
+let game = null;
+let canvas = null;
+let context = null;
+
+let isResizeConfirmOpened = false;
 
 function expand() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  let reset = false;
+  if (!isResizeConfirmOpened) {
+    isResizeConfirmOpened = true;
+    reset = confirm(
+      'You have just changed size of the screen, do you wanna resize game field? If yes, current game will be lost!'
+    );
+
+    isResizeConfirmOpened = false;
+  }
+
+  if (!loaded || !reset) {
+    return;
+  }
+
+  init();
 }
 
-expand();
+function init() {
+  canvas = document.querySelector('canvas');
+  context = canvas.getContext('2d');
 
-context.font = '20px Arial';
-context.strokeStyle = context.fillStyle = 'white';
-const game = new SnakeGame(canvas, new Position(0, 0), 20);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  context.font = '12px PressStart2P';
 
-game.update();
+  game = new SnakeGame(canvas, new Position(0, 0), 20);
+
+  game.update();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (!context || !game) {
+    return;
+  }
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = context.fillStyle = '#ffeac9';
+
+  game.update();
+  // fpsCounter.update();
+}
+
+animate();

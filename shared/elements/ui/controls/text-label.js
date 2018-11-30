@@ -32,8 +32,6 @@ export default class TextLabel extends UIElement {
   }
 
   update(labelText) {
-    this.adjustSize();
-
     if (!!labelText) {
       this.labelText = labelText;
     }
