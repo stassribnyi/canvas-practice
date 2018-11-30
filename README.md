@@ -14,3 +14,7 @@
 ## 3. Tic-Tac-Toe
 
 [Demo](https://stassribnyi.github.io/canvas-learning/tic-tac-toe/)
+
+## 4. Snake
+
+[Demo](https://stassribnyi.github.io/canvas-learning/snake/)

@@ -1,9 +1,10 @@
 import { SnakeGame } from './game/index.js';
-import { Position } from '../../shared/index.js';
+import { Position, FPSCounter } from '../../shared/index.js';
 
 let loaded = false;
 
 window.addEventListener('resize', () => expand());
+window.addEventListener('keydown', ({ keyCode }) => handleKey(keyCode));
 window.addEventListener('load', () => {
   loaded = true;
   init();
@@ -12,8 +13,16 @@ window.addEventListener('load', () => {
 let game = null;
 let canvas = null;
 let context = null;
+let fpsCounter = null;
+let toggleFPSCounter = false;
 
 let isResizeConfirmOpened = false;
+
+function handleKey(keyCode) {
+  if (keyCode === 70) {
+    toggleFPSCounter = !toggleFPSCounter;
+  }
+}
 
 function expand() {
   let reset = false;
@@ -41,9 +50,8 @@ function init() {
   canvas.height = window.innerHeight;
   context.font = '12px PressStart2P';
 
+  fpsCounter = new FPSCounter(context);
   game = new SnakeGame(canvas, new Position(0, 0), 20);
-
-  game.update();
 }
 
 function animate() {
@@ -57,7 +65,10 @@ function animate() {
   context.strokeStyle = context.fillStyle = '#ffeac9';
 
   game.update();
-  // fpsCounter.update();
+
+  if (toggleFPSCounter) {
+    fpsCounter.update();
+  }
 }
 
 animate();
