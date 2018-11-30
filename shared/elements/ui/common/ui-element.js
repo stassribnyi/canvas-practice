@@ -77,11 +77,22 @@ export default class UIElement {
   }
 
   update() {
-      this.draw();
+    this.draw();
   }
 
   destroy() {
     this.eventListeners.clear();
     this.unregisterClickHandler();
+  }
+
+  static measureText(container, text) {
+    const context = container.getContext('2d');
+    const width = context.measureText(text).width;
+    const height = parseInt(context.font.match(/\d+/), 10);
+
+    return {
+      width,
+      height
+    };
   }
 }

@@ -1,7 +1,12 @@
 import { UIElement } from '../common/index.js';
 
 export default class TextLabel extends UIElement {
-  constructor(container, position, labelText, width, height) {
+  constructor(container, position, labelText) {
+    const { width, height } = UIElement.measureText(
+      container,
+      labelText
+    );
+
     super(container, position, width, height);
 
     this.labelText = labelText;

@@ -13,51 +13,56 @@ function expand() {
 expand();
 
 class SnakeGame extends UIElement {
+  constructor(container, tileSize) {
+    // Create Game Field
+    const xAmount = Math.floor(container.width / tileSize);
+    const yAmount = Math.floor(container.height / tileSize);
+    const reserve = 5;
+
+    const map = {
+      width: (xAmount - reserve) * tileSize,
+      height: (yAmount - reserve) * tileSize
+    };
+
+    const position = new Position(
+      (container.width - map.width) / 2,
+      (container.height - map.height) / 2
+    );
+
+    super(container, position, map.width, map.height);
+
+    this.createTopPanel();
+  }
+
+  createTopPanel() {
+    this.score = new TextLabel(this.container, null, 'Score: X', 200, 10);
+
+    this.score.position = new Position(
+      this.position.x + this.width - this.score.width,
+      this.position.y
+    );
+  }
+
   draw() {
     const { x, y } = this.position;
 
     this.context.strokeRect(x, y, this.width, this.height);
   }
+
+  update() {
+    this.draw();
+
+    this.score.update();
+  }
+
+  destroy() {
+    super.destroy();
+
+    this.score.destroy();
+  }
 }
+context.font = '20px Arial';
+context.strokeStyle = context.fillStyle = 'white';
+const game = new SnakeGame(canvas, 20);
 
-context.fillStyle = context.strokeStyle = 'white';
-context.font = '30px Arial';
-
-const gameLabel = new TextLabel(
-  canvas,
-  new Position(10, 10),
-  'Snake Game',
-  180,
-  30
-);
-
-gameLabel.draw();
-
-const onClick = () => {
-  console.log('Snake Game Label clicked.');
-
-  gameLabel.removeEventListener('click', onClick);
-
-  console.log('Listener removed.');
-
-  gameLabel.destroy();
-
-  console.log('Snake Game Label destroyed.');
-};
-
-gameLabel.addEventListener('click', onClick);
-
-const scaleFactor = 0.9;
-
-const map = {
-  width: canvas.width * scaleFactor,
-  height: canvas.height * scaleFactor
-};
-
-const position = new Position(
-  (canvas.width - map.width) / 2,
-  (canvas.height - map.height) / 2
-);
-
-const game = new SnakeGame(canvas, position, map.width, map.height);
-game.draw();
+game.update();
