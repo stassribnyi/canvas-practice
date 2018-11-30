@@ -47,9 +47,11 @@ const onClick = () => {
 
 gameLabel.addEventListener('click', onClick);
 
+const scaleFactor = 0.9;
+
 const map = {
-  width: canvas.width * 0.9,
-  height: canvas.height * 0.9
+  width: canvas.width * scaleFactor,
+  height: canvas.height * scaleFactor
 };
 
 const position = new Position(
@@ -57,5 +59,5 @@ const position = new Position(
   (canvas.height - map.height) / 2
 );
 
-const game = new SnakeGame(canvas, position, map.width, map.height);
+const game = new SnakeGame(null, position, map.width, map.height);
 game.draw();
