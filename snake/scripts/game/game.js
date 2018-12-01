@@ -19,6 +19,7 @@ export default class SnakeGame extends UIElement {
       20
     );
 
+    this.eated = 0;
     this.score = score;
     this.field = field;
     this.snake = snake;
@@ -68,24 +69,26 @@ export default class SnakeGame extends UIElement {
       this.food = GameField.getRandomCellPosition(this.field, [
         this.snake.segments.map(x => x.position)
       ]);
+
+      this.eated++;
     }
 
     const snakeFields = this.snake.segments.map(
       ({ position, size }) =>
-        new FieldCell(this.container, position, size, 'green')
+        new FieldCell(this.container, position, size, 'rgb(57, 158, 90)')
     );
 
     const foodCell = new FieldCell(
       this.container,
       this.food,
       this.snake.segmentSize,
-      'red'
+      'rgb(255, 107, 107)'
     );
 
     const cells = [...snakeFields, foodCell];
 
     this.field.update(cells);
-    this.score.update();
+    this.score.update(`Scores: ${this.eated}`);
   }
 
   destroy() {
