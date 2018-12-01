@@ -26,6 +26,34 @@ export default class SnakeGame extends UIElement {
 
   draw() {}
 
+  handleKey(keyCode) {
+    switch (keyCode) {
+      case 38:
+      case 87:
+        this.snake.setHeadDirection(Directions.TOP);
+        break;
+      case 39:
+      case 68:
+        this.snake.setHeadDirection(Directions.RIGHT);
+        break;
+      case 37:
+      case 65:
+        this.snake.setHeadDirection(Directions.LEFT);
+        break;
+      case 40:
+      case 83:
+        this.snake.setHeadDirection(Directions.BOTTOM);
+        break;
+      case 13:
+        // TODO Remove
+        this.snake.eat(20);
+      default:
+        break;
+    }
+
+    return;
+  }
+
   update() {
     this.draw();
 
@@ -65,7 +93,9 @@ export default class SnakeGame extends UIElement {
     } = GameField.getCentralCell(availableWidth, availableHeight, tileSize);
 
     const headPosition = new Position(headX * snakeSize, headY * snakeSize);
-    const snake = new Snake(headPosition, snakeSize);
+
+    // Increase snake's speed to 10 segments by second
+    const snake = new Snake(headPosition, snakeSize, 10);
 
     const score = SnakeGame.createScore(
       container,
@@ -93,31 +123,6 @@ export default class SnakeGame extends UIElement {
       field,
       snake
     };
-  }
-
-  handleKey(keyCode) {
-    switch (keyCode) {
-      case 38:
-      case 87:
-        this.snake.setHeadDirection(Directions.TOP);
-        break;
-      case 39:
-      case 68:
-        this.snake.setHeadDirection(Directions.RIGHT);
-        break;
-      case 37:
-      case 65:
-        this.snake.setHeadDirection(Directions.LEFT);
-        break;
-      case 40:
-      case 83:
-        this.snake.setHeadDirection(Directions.BOTTOM);
-        break;
-      default:
-        break;
-    }
-
-    return;
   }
 
   static createScore(container, position, width) {

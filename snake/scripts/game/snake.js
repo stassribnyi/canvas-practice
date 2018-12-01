@@ -15,41 +15,35 @@ class SnakeSegment {
     this.size = size;
   }
 
-  move() {
+  move(opposite = false) {
+    const step = !opposite ? this.size : -this.size;
+
     switch (this.direction) {
       case Directions.BOTTOM: {
-        this.position = new Position(
-          this.position.x,
-          this.position.y + this.size
-        );
+        this.position = new Position(this.position.x, this.position.y + step);
 
         break;
       }
       case Directions.TOP: {
-        this.position = new Position(
-          this.position.x,
-          this.position.y - this.size
-        );
+        this.position = new Position(this.position.x, this.position.y - step);
 
         break;
       }
       case Directions.LEFT: {
-        this.position = new Position(
-          this.position.x - this.size,
-          this.position.y
-        );
+        this.position = new Position(this.position.x - step, this.position.y);
 
         break;
       }
       case Directions.RIGHT: {
-        this.position = new Position(
-          this.position.x + this.size,
-          this.position.y
-        );
+        this.position = new Position(this.position.x + step, this.position.y);
 
         break;
       }
     }
+  }
+
+  clone() {
+    return new SnakeSegment({ ...this.position }, this.size, this.direction);
   }
 }
 
@@ -69,15 +63,35 @@ export default class Snake {
   }
 
   eat() {
-    const old = { ...this.segments[0] };
-    const news = new Position(old.x - this.segmentSize, old.y);
-    this.segments.unshift(news);
+    const lastSegment = this.segments[this.segments.length - 1];
+    const newSegment = lastSegment.clone();
+    newSegment.move(true);
+
+    this.segments.push(newSegment);
   }
 
   moveSegments() {
-    const head = this.segments[0];
+    if (this.segments.length === 1) {
+      this.segments[0].move();
 
-    this.segments.forEach(s => s.move());
+      return;
+    }
+
+    for (let i = this.segments.length - 1; i >= 0; i--) {
+      const current = this.segments[i];
+
+      current.move();
+
+      if (i === 0) {
+        break;
+      }
+
+      const next = this.segments[i - 1];
+
+      if (current.direction !== next.direction) {
+        current.direction = next.direction;
+      }
+    }
   }
 
   move() {
@@ -93,8 +107,26 @@ export default class Snake {
     this.moveSegments();
   }
 
+  canSetDirection(newDirection, oldDirection) {
+    const moreThenOne = this.segments.length > 1;
+
+    if (!moreThenOne) {
+      return true;
+    }
+
+    if (!Directions.areOpposite(newDirection, oldDirection)) {
+      return true;
+    }
+
+    return false;
+  }
+
   setHeadDirection(direction) {
     const head = this.segments[0];
+
+    if (!this.canSetDirection(direction, head.direction)) {
+      return;
+    }
 
     head.direction = direction;
   }
