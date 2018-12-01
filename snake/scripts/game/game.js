@@ -46,7 +46,7 @@ export default class SnakeGame extends UIElement {
         break;
       case 13:
         // TODO Remove
-        this.snake.eat(20);
+        this.snake.eat(2);
       default:
         break;
     }
@@ -58,6 +58,7 @@ export default class SnakeGame extends UIElement {
     this.draw();
 
     this.snake.move();
+
     const snakeFields = this.snake.segments.map(
       ({ position }) =>
         new FieldCell(this.container, position, this.snake.segmentSize, 'green')

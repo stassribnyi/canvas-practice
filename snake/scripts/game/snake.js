@@ -1,6 +1,7 @@
 import { Position, Directions } from '../../shared.js';
 
 const DEFAULT_SNAKES_SPEED = 1;
+const DEFAULT_SNAKES_FOOD_AMOUNT = 1;
 
 class SnakeSegment {
   /**
@@ -62,12 +63,14 @@ export default class Snake {
     this.prevTime = new Date().getTime();
   }
 
-  eat() {
-    const lastSegment = this.segments[this.segments.length - 1];
-    const newSegment = lastSegment.clone();
-    newSegment.move(true);
+  eat(amount = DEFAULT_SNAKES_FOOD_AMOUNT) {
+    for (let i = 0; i < amount; i++) {
+      const lastSegment = this.segments[this.segments.length - 1];
+      const newSegment = lastSegment.clone();
+      newSegment.move(true);
 
-    this.segments.push(newSegment);
+      this.segments.push(newSegment);
+    }
   }
 
   moveSegments() {
