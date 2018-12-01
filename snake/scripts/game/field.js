@@ -1,4 +1,5 @@
 import { UIElement } from '../../shared.js';
+import { Position, getRandomInt } from '../../../shared/index.js';
 
 export default class GameField extends UIElement {
   constructor(container, position, width, height, tileSize) {
@@ -27,15 +28,53 @@ export default class GameField extends UIElement {
     super.destroy();
   }
 
-  static getCentralCell(width, height, tileSize) {
-    const x = Math.floor(width / tileSize / 2);
-    const y = Math.floor(height / tileSize / 2);
+  static getRandomCellPosition(field, except = []) {
+    const xAmount = Math.floor(field.width / field.tileSize);
+    const yAmount = Math.floor(field.height / field.tileSize);
 
-    return {
-      x,
-      y,
-      tileSize
-    };
+    const excludePoints = !except
+      ? except.map(p => ({ x: p.x / field.tileSize, y: p.y / field.tileSize }))
+      : [];
+
+    const availableCells = [];
+
+    for (let x = 0; x < xAmount; x++) {
+      for (let y = 0; y < yAmount; y++) {
+        if (excludePoints.some(p => p.x === x && p.y === y)) {
+          continue;
+        }
+
+        availableCells.push({ x, y });
+      }
+    }
+
+    if (!availableCells.length) {
+      return null;
+    }
+
+    const cellIndex = getRandomInt(0, availableCells.length);
+    const cell = availableCells[cellIndex];
+
+    const xPosition = cell.x * field.tileSize;
+    const yPosition = cell.y * field.tileSize;
+
+    return new Position(
+      field.position.x + xPosition,
+      field.position.y + yPosition
+    );
+  }
+
+  static getCentralCellPosition(field) {
+    const x = Math.floor(field.width / field.tileSize / 2);
+    const y = Math.floor(field.height / field.tileSize / 2);
+
+    const xPosition = x * field.tileSize;
+    const yPosition = y * field.tileSize;
+
+    return new Position(
+      field.position.x + xPosition,
+      field.position.y + yPosition
+    );
   }
 
   static measureSize(width, height, tileSize) {

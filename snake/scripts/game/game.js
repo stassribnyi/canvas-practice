@@ -10,7 +10,7 @@ export default class SnakeGame extends UIElement {
 
     super(container, position, width, height);
 
-    const { score, field, snake } = SnakeGame.buildGame(
+    const { score, field, snake, food } = SnakeGame.buildGame(
       container,
       position,
       width,
@@ -22,6 +22,7 @@ export default class SnakeGame extends UIElement {
     this.score = score;
     this.field = field;
     this.snake = snake;
+    this.food = food;
   }
 
   draw() {}
@@ -58,13 +59,32 @@ export default class SnakeGame extends UIElement {
     this.draw();
 
     this.snake.move();
-
-    const snakeFields = this.snake.segments.map(
-      ({ position }) =>
-        new FieldCell(this.container, position, this.snake.segmentSize, 'green')
+    const catched = this.snake.segments.some(
+      ({ position }) => this.food.x === position.x && this.food.y === position.y
     );
 
-    this.field.update(snakeFields);
+    if (catched) {
+      this.snake.eat();
+      this.food = GameField.getRandomCellPosition(this.field, [
+        this.snake.segments.map(x => x.position)
+      ]);
+    }
+
+    const snakeFields = this.snake.segments.map(
+      ({ position, size }) =>
+        new FieldCell(this.container, position, size, 'green')
+    );
+
+    const foodCell = new FieldCell(
+      this.container,
+      this.food,
+      this.snake.segmentSize,
+      'red'
+    );
+
+    const cells = [...snakeFields, foodCell];
+
+    this.field.update(cells);
     this.score.update();
   }
 
@@ -87,17 +107,6 @@ export default class SnakeGame extends UIElement {
       tileSize
     );
 
-    const {
-      x: headX,
-      y: headY,
-      tileSize: snakeSize
-    } = GameField.getCentralCell(availableWidth, availableHeight, tileSize);
-
-    const headPosition = new Position(headX * snakeSize, headY * snakeSize);
-
-    // Increase snake's speed to 10 segments by second
-    const snake = new Snake(headPosition, snakeSize, 10);
-
     const score = SnakeGame.createScore(
       container,
       contentPosition,
@@ -119,10 +128,18 @@ export default class SnakeGame extends UIElement {
       tileSize
     );
 
+    const headPosition = GameField.getCentralCellPosition(field);
+
+    const food = GameField.getRandomCellPosition(field, [headPosition]);
+
+    // Increase snake's speed to 10 segments by second
+    const snake = new Snake(headPosition, tileSize, 10);
+
     return {
       score,
       field,
-      snake
+      snake,
+      food
     };
   }
 
