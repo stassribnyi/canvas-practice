@@ -1,5 +1,5 @@
-import { SnakeGame } from './game/index.js';
 import { Position, FPSCounter } from '../../shared/index.js';
+import { SnakeGame } from './game/index.js';
 
 let loaded = false;
 
@@ -22,6 +22,8 @@ function handleKey(keyCode) {
   if (keyCode === 70) {
     toggleFPSCounter = !toggleFPSCounter;
   }
+
+  game.handleKey(keyCode);
 }
 
 function expand() {

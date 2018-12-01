@@ -1,3 +1,3 @@
-import SnakeGame from './snake.js';
+import SnakeGame from './game.js';
 
 export { SnakeGame };

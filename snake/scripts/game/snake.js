@@ -1,82 +1,101 @@
-import { Position, UIElement, TextLabel } from '../../shared.js';
-import GameField from './field.js';
+import { Position, Directions } from '../../shared.js';
 
-export default class SnakeGame extends UIElement {
-  constructor(container, position, tileSize) {
-    const { width, height } = container;
+const DEFAULT_SNAKES_SPEED = 1;
 
-    super(container, position, width, height);
-
-    this.tileSize = tileSize;
-
-    this.padding = 20;
-
-    this.buildGame();
+class SnakeSegment {
+  /**
+   * the segment of the snake
+   * @param {Position} position the head position of the snake
+   * @param {number} size the size of one snake's segment (both width and height)
+   * @param {Directions} direction the direction of the segment
+   */
+  constructor(position, size, direction = Directions.TOP) {
+    this.direction = direction;
+    this.position = position;
+    this.size = size;
   }
 
-  buildGame() {
-    const totalPadding = this.padding * 2;
-    const availableWidth = this.width - totalPadding;
-    const availableHeight = this.height - totalPadding;
+  move() {
+    switch (this.direction) {
+      case Directions.BOTTOM: {
+        this.position = new Position(
+          this.position.x,
+          this.position.y + this.size
+        );
 
-    const contentPosition = Position.sum(this.position, this.padding);
-    const { width: fieldTakenWidth } = GameField.measureSize(
-      availableWidth,
-      availableHeight,
-      this.tileSize
-    );
+        break;
+      }
+      case Directions.TOP: {
+        this.position = new Position(
+          this.position.x,
+          this.position.y - this.size
+        );
 
-    this.score = this.createScore(
-      this.container,
-      contentPosition,
-      fieldTakenWidth
-    );
+        break;
+      }
+      case Directions.LEFT: {
+        this.position = new Position(
+          this.position.x - this.size,
+          this.position.y
+        );
 
-    const scoreTakenHeight = this.score.height * 2;
+        break;
+      }
+      case Directions.RIGHT: {
+        this.position = new Position(
+          this.position.x + this.size,
+          this.position.y
+        );
 
-    const fieldPosition = new Position(
-      contentPosition.x,
-      contentPosition.y + scoreTakenHeight
-    );
-    this.field = this.createField(
-      this.container,
-      fieldPosition,
-      availableWidth,
-      availableHeight - scoreTakenHeight,
-      this.tileSize
-    );
+        break;
+      }
+    }
+  }
+}
+
+export default class Snake {
+  /** the instance of snake
+   * @param {Position} position the head position of the snake
+   * @param {number} segmentSize the size of one snake's segment (both width and height)
+   * @param {number} speed the speed of snake's movement in numbers of segments by one second
+   * by default is one
+   */
+  constructor(position, segmentSize, speed = DEFAULT_SNAKES_SPEED) {
+    this.segments = [new SnakeSegment(position, segmentSize)];
+    this.segmentSize = segmentSize;
+    this.speed = speed;
+
+    this.prevTime = new Date().getTime();
   }
 
-  createScore(container, position, width) {
-    const score = new TextLabel(container, position, 'Score: 0');
-
-    const headerPosition = new Position(
-      position.x + width - score.width,
-      position.y
-    );
-
-    score.position = headerPosition;
-
-    return score;
+  eat() {
+    const old = { ...this.segments[0] };
+    const news = new Position(old.x - this.segmentSize, old.y);
+    this.segments.unshift(news);
   }
 
-  createField(container, position, width, height, tileSize) {
-    return new GameField(container, position, width, height, tileSize);
+  moveSegments() {
+    const head = this.segments[0];
+
+    this.segments.forEach(s => s.move());
   }
 
-  draw() {}
+  move() {
+    const milliseconds = 1000;
+    const currentTime = new Date().getTime();
+    const threshold = milliseconds / (this.speed | DEFAULT_SNAKES_SPEED);
 
-  update() {
-    this.draw();
+    if (threshold > currentTime - this.prevTime) {
+      return;
+    }
 
-    this.field.update();
-    this.score.update();
+    this.prevTime = currentTime;
+    this.moveSegments();
   }
 
-  destroy() {
-    super.destroy();
+  setHeadDirection(direction) {
+    const head = this.segments[0];
 
-    this.field.destroy();
-    this.score.destroy();
+    head.direction = direction;
   }
 }
