@@ -28,6 +28,29 @@ export default class SnakeGame extends UIElement {
   }
 
   checkRules() {
+    const selfCatched = this.snake.segments.some(segment =>
+      this.snake.canBeEaten(segment)
+    );
+
+    if (selfCatched) {
+      alert('Game over!');
+      location.reload();
+    }
+
+    const outOfField = this.snake.segments.some(
+      segment =>
+        !GameField.isWithinBoundaries(this.field, {
+          position: segment.position,
+          width: segment.size,
+          height: segment.size
+        })
+    );
+
+    if (outOfField) {
+      alert('Game over!');
+      location.reload();
+    }
+
     const catched = this.snake.canBeEaten(this.food);
 
     if (catched) {

@@ -94,8 +94,8 @@ export default class GameField extends UIElement {
     const { width: cw, height: ch } = child;
     const { x: cx, y: cy } = child.position;
 
-    const withinXBoundaries = px <= cx && px + pw <= cx + cw;
-    const withinYBoundaries = py <= cy && py + ph <= cy + ch;
+    const withinXBoundaries = px <= cx && cx + cw <= px + pw;
+    const withinYBoundaries = py <= cy && cy + ch <= py + ph;
 
     return withinXBoundaries && withinYBoundaries;
   }

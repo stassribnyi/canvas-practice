@@ -63,12 +63,11 @@ export default class Snake {
   }
 
   canBeEaten(food) {
-    const foodPosition = food.position;
-    const foodSize = food.size;
-
     return this.segments.some(
-      ({ position }) =>
-        foodPosition.x === position.x && foodPosition.y === position.y
+      segment =>
+        segment !== food &&
+        segment.position.x === food.position.x &&
+        segment.position.y === food.position.y
     );
   }
 
