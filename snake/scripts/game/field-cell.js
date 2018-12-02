@@ -1,4 +1,4 @@
-import { UIElement } from '../../shared.js';
+import { UIElement, Colors } from '../../shared.js';
 
 export default class FieldCell extends UIElement {
   constructor(container, position, tileSize, color) {
@@ -14,7 +14,7 @@ export default class FieldCell extends UIElement {
     const oldStrokeStyle = this.context.strokeStyle;
 
     this.context.fillStyle = this.color;
-    this.context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+    this.context.strokeStyle = Colors.DARK;
 
     this.context.fillRect(x, y, this.width, this.height);
     this.context.strokeRect(x, y, this.width, this.height);

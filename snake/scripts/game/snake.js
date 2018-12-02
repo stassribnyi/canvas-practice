@@ -57,10 +57,19 @@ export default class Snake {
    */
   constructor(position, segmentSize, speed = DEFAULT_SNAKES_SPEED) {
     this.segments = [new SnakeSegment(position, segmentSize)];
-    this.segmentSize = segmentSize;
     this.speed = speed;
 
     this.prevTime = new Date().getTime();
+  }
+
+  canBeEaten(food) {
+    const foodPosition = food.position;
+    const foodSize = food.size;
+
+    return this.segments.some(
+      ({ position }) =>
+        foodPosition.x === position.x && foodPosition.y === position.y
+    );
   }
 
   eat(amount = DEFAULT_SNAKES_FOOD_AMOUNT) {

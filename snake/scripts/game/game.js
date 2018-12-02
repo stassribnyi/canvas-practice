@@ -1,8 +1,10 @@
-import { Position, Directions, UIElement, TextLabel } from '../../shared.js';
+import { Colors, Position, UIElement, Directions } from '../../shared.js';
 
-import GameField from './field.js';
-import Snake from './snake.js';
 import FieldCell from './field-cell.js';
+import GameField from './field.js';
+import GameScore from './score.js';
+import Snake from './snake.js';
+import Food from './food.js';
 
 export default class SnakeGame extends UIElement {
   constructor(container, position, tileSize) {
@@ -19,11 +21,28 @@ export default class SnakeGame extends UIElement {
       20
     );
 
-    this.eated = 0;
     this.score = score;
     this.field = field;
     this.snake = snake;
     this.food = food;
+  }
+
+  checkRules() {
+    const catched = this.snake.canBeEaten(this.food);
+
+    if (catched) {
+      this.snake.eat();
+
+      const segmentsPositions = this.snake.segments.map(x => x.position);
+      const newFoodPosition = GameField.getRandomCellPosition(
+        this.field,
+        segmentsPositions
+      );
+
+      this.food = this.food.clone(newFoodPosition);
+
+      this.score.increment();
+    }
   }
 
   draw() {}
@@ -57,38 +76,29 @@ export default class SnakeGame extends UIElement {
   }
 
   update() {
-    this.draw();
-
     this.snake.move();
-    const catched = this.snake.segments.some(
-      ({ position }) => this.food.x === position.x && this.food.y === position.y
-    );
+    this.checkRules();
 
-    if (catched) {
-      this.snake.eat();
-      this.food = GameField.getRandomCellPosition(this.field, [
-        this.snake.segments.map(x => x.position)
-      ]);
+    const snakeCells = this.snakeToCells(this.container, this.snake);
 
-      this.eated++;
-    }
+    const foodCell = this.foodToCell(this.container, this.food);
 
-    const snakeFields = this.snake.segments.map(
-      ({ position, size }) =>
-        new FieldCell(this.container, position, size, 'rgb(57, 158, 90)')
-    );
+    const cells = [...snakeCells, foodCell];
 
-    const foodCell = new FieldCell(
-      this.container,
-      this.food,
-      this.snake.segmentSize,
-      'rgb(255, 107, 107)'
-    );
-
-    const cells = [...snakeFields, foodCell];
-
+    this.draw();
     this.field.update(cells);
-    this.score.update(`Scores: ${this.eated}`);
+    this.score.update();
+  }
+
+  foodToCell(container, food) {
+    return new FieldCell(container, food.position, food.size, Colors.RED);
+  }
+
+  snakeToCells(container, snake) {
+    return snake.segments.map(
+      ({ position, size }) =>
+        new FieldCell(container, position, size, Colors.GREEN)
+    );
   }
 
   destroy() {
@@ -132,8 +142,9 @@ export default class SnakeGame extends UIElement {
     );
 
     const headPosition = GameField.getCentralCellPosition(field);
+    const foodPosition = GameField.getRandomCellPosition(field, [headPosition]);
 
-    const food = GameField.getRandomCellPosition(field, [headPosition]);
+    const food = new Food(foodPosition, tileSize);
 
     // Increase snake's speed to 10 segments by second
     const snake = new Snake(headPosition, tileSize, 10);
@@ -147,16 +158,10 @@ export default class SnakeGame extends UIElement {
   }
 
   static createScore(container, position, width) {
-    const score = new TextLabel(container, position, 'Score: 0');
-
-    const headerPosition = new Position(
-      position.x + width - score.width,
-      position.y
+    return new GameScore(
+      container,
+      new Position(position.x + width, position.y)
     );
-
-    score.position = headerPosition;
-
-    return score;
   }
 
   static createField(container, position, width, height, tileSize) {

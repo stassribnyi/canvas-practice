@@ -1,11 +1,18 @@
+import { TextAlignOptions } from '../../../constants/index.js';
 import { UIElement } from '../common/index.js';
 
 const DEFAULT_BASELINE = 'top';
 
 export default class TextLabel extends UIElement {
-  constructor(container, position, labelText) {
+  constructor(
+    container,
+    position,
+    labelText,
+    textAlign = TextAlignOptions.START
+  ) {
     super(container, position, null, null);
 
+    this.textAlign = textAlign;
     this.labelText = labelText;
     this.adjustSize();
   }
@@ -14,11 +21,14 @@ export default class TextLabel extends UIElement {
     const { x, y } = this.position;
 
     const oldBaseline = this.context.textBaseline;
+    const oldTextAlign = this.context.textAlign;
 
     this.context.textBaseline = DEFAULT_BASELINE;
-    this.context.fillText(this.labelText, x, y, this.width);
+    this.context.textAlign = this.textAlign || TextAlignOptions.START;
+    this.context.fillText(this.labelText, x, y);
 
     this.context.textBaseline = oldBaseline;
+    this.context.textAlign = oldTextAlign;
   }
 
   adjustSize() {
@@ -35,6 +45,8 @@ export default class TextLabel extends UIElement {
     if (!!labelText) {
       this.labelText = labelText;
     }
+
+    this.adjustSize();
 
     this.draw();
   }
