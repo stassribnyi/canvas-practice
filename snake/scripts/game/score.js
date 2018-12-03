@@ -1,7 +1,7 @@
 import { TextLabel, TextAlignOptions } from '../../shared.js';
 
-const getScoreText = score => `Score: ${score}`;
-const getBestScoreText = score => (score > 0 ? `Best Score: ${score}` : '');
+const getScoreText = score => `${score}`;
+const getBestScoreText = score => (score > 0 ? `Best: ${score}` : '');
 
 const bestScoreKey = 'best-snake-score';
 
@@ -49,7 +49,7 @@ export default class GameScore extends TextLabel {
 
     const allScoresText = !bestScoreText
       ? scoreText
-      : `[ ${scoreText} ] - [ ${bestScoreText} ]`;
+      : `Score ${scoreText} / ${bestScoreText}`;
 
     super.update(allScoresText);
   }
