@@ -15,13 +15,17 @@ function handleTouchStart(event) {
   const { clientX, clientY } = event.touches[0];
 
   initialTouch = {
-    x: clientX,
-    y: clientY
+    clientX,
+    clientY
   };
 }
 
 function handleTouchMove(event) {
   const direction = getSwipeDirection(initialTouch, event.touches[0]);
+
+  if (!direction) {
+    return;
+  }
 
   game.handleMove(direction);
 

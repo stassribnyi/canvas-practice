@@ -87,7 +87,7 @@ export function getRandomCoordinates(particles, container, radius) {
 
 export function getSwipeDirection(initialTouch, currentTouch) {
   if (initialTouch === null) {
-    return;
+    return null;
   }
 
   const { clientX: cx, clientY: cy } = currentTouch;
