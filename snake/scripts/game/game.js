@@ -33,7 +33,7 @@ export default class SnakeGame extends UIElement {
   }
 
   checkRules() {
-    const selfCatched = this.snake.segments.some(segment =>
+    const caughtSelf = this.snake.segments.some(segment =>
       this.snake.canBeEaten(segment)
     );
 
@@ -46,7 +46,7 @@ export default class SnakeGame extends UIElement {
         })
     );
 
-    if (outOfField || selfCatched) {
+    if (outOfField || caughtSelf) {
       // TODO implement game state
       alert('Game over!');
       const bestScore = +sessionStorage.getItem('best-snake-score');
@@ -62,9 +62,9 @@ export default class SnakeGame extends UIElement {
       return;
     }
 
-    const catched = this.snake.canBeEaten(this.food);
+    const caught = this.snake.canBeEaten(this.food);
 
-    if (catched) {
+    if (caught) {
       this.snake.eat();
 
       const segmentsPositions = this.snake.segments.map(x => x.position);

@@ -6,8 +6,8 @@ import {
 } from '../../shared/index.js';
 import { SnakeGame } from './game/index.js';
 
-document.addEventListener('touchstart', handleTouchStart);
-document.addEventListener('touchmove', handleTouchMove);
+document.addEventListener('touchstart', handleTouchStart, { passive: false });
+document.addEventListener('touchmove', handleTouchMove, { passive: false });
 
 let initialTouch = null;
 
@@ -32,6 +32,7 @@ function handleTouchMove(event) {
   initialTouch = null;
 
   event.preventDefault();
+  event.stopImmediatePropagation();
 }
 
 let loaded = false;
