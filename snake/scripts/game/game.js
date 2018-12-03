@@ -51,13 +51,6 @@ export default class SnakeGame extends UIElement {
     if (outOfField || caughtSelf) {
       this.state = GameStates.LOSS;
 
-      // TODO move displaying best score into score item
-      const bestScore = +sessionStorage.getItem('best-snake-score');
-
-      if (this.score.score > bestScore) {
-        sessionStorage.setItem('best-snake-score', this.score.score);
-      }
-
       // TODO call from menu
       this.reset();
 
