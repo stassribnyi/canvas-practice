@@ -1,5 +1,9 @@
-import { UIElement } from '../../shared.js';
-import { Position, getRandomInt } from '../../../shared/index.js';
+import {
+  Position,
+  UIElement,
+  getRandomInt,
+  drawRoundedRect
+} from '../../shared.js';
 
 export default class GameField extends UIElement {
   constructor(container, position, width, height, tileSize) {
@@ -11,9 +15,9 @@ export default class GameField extends UIElement {
   }
 
   draw() {
-    const { x, y } = this.position;
+    drawRoundedRect(this.context, this.position, this.width, this.height, 4);
 
-    this.context.strokeRect(x, y, this.width, this.height);
+    this.context.stroke();
   }
 
   update(fields) {

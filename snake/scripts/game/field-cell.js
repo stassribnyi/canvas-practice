@@ -1,4 +1,4 @@
-import { UIElement, Colors } from '../../shared.js';
+import { UIElement, Colors, drawRoundedRect } from '../../shared.js';
 
 export default class FieldCell extends UIElement {
   constructor(container, position, tileSize, color) {
@@ -8,16 +8,16 @@ export default class FieldCell extends UIElement {
   }
 
   draw() {
-    const { x, y } = this.position;
-
     const oldFillStyle = this.context.fillStyle;
     const oldStrokeStyle = this.context.strokeStyle;
 
     this.context.fillStyle = this.color;
     this.context.strokeStyle = Colors.DARK;
 
-    this.context.fillRect(x, y, this.width, this.height);
-    this.context.strokeRect(x, y, this.width, this.height);
+    drawRoundedRect(this.context, this.position, this.width, this.height, 4);
+
+    this.context.fill();
+    this.context.stroke();
 
     this.context.fillStyle = oldFillStyle;
     this.context.strokeStyle = oldStrokeStyle;
