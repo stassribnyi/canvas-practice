@@ -1,8 +1,9 @@
 import {
+  Colors,
   Position,
   FPSCounter,
-  getSwipeDirection,
-  getKeyDirection
+  getKeyDirection,
+  getSwipeDirection
 } from '../../shared/index.js';
 import { SnakeGame } from './game/index.js';
 
@@ -110,7 +111,7 @@ function animate() {
   }
 
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = context.fillStyle = '#ffeac9';
+  context.strokeStyle = context.fillStyle = Colors.FOREGROUND;
 
   game.update();
 
