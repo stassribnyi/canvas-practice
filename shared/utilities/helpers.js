@@ -125,3 +125,19 @@ export function getKeyDirection(keyCode) {
       return null;
   }
 }
+
+export function getDarkerRGBColor(input, percent) {
+  const split = input
+    .split('(')[1]
+    .split(')')[0]
+    .split(',')
+    .map(number => (Number(number) || 0) * percent);
+
+  if (split.length === 3 || split.length === 4) {
+    const isRgba = split.length === 4;
+
+    return `${isRgba ? 'rgba' : 'rgb'}(${split[0]}, ${split[1]}, ${split[2]})`;
+  }
+
+  return 'rgb(0, 0, 0)';
+}

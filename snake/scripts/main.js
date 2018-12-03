@@ -97,8 +97,8 @@ function init() {
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  context.font = '12px PressStart2P';
-
+  context.font = '14px PressStart2P';
+context.lineWidth = 2;
   fpsCounter = new FPSCounter(context);
   game = new SnakeGame(canvas, new Position(0, 0), 20);
 }
