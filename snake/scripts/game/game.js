@@ -1,4 +1,4 @@
-import { Colors, Position, UIElement, Directions } from '../../shared.js';
+import { Colors, Position, UIElement } from '../../shared.js';
 
 import FieldCell from './field-cell.js';
 import GameField from './field.js';
@@ -14,7 +14,7 @@ const GameStates = Object.freeze({
   WIN: Symbol('win')
 });
 
-const DEFAULT_GAME_SPEED = 5;
+const DEFAULT_GAME_SPEED = 10;
 
 export default class SnakeGame extends UIElement {
   constructor(container, position, tileSize, padding = 20) {
@@ -24,8 +24,10 @@ export default class SnakeGame extends UIElement {
 
     const buildArgs = { container, position, width, height, tileSize, padding };
 
-    const { score, field, snake, food } = SnakeGame.buildGame(buildArgs);
+    const { score, field } = SnakeGame.createGameUI(buildArgs);
+    const { snake, food } = SnakeGame.createGameItems(field);
 
+    this.state = GameStates.READY;
     this.score = score;
     this.field = field;
     this.snake = snake;
@@ -47,17 +49,17 @@ export default class SnakeGame extends UIElement {
     );
 
     if (outOfField || caughtSelf) {
-      // TODO implement game state
-      alert('Game over!');
+      this.state = GameStates.LOSS;
+
+      // TODO move displaying best score into score item
       const bestScore = +sessionStorage.getItem('best-snake-score');
 
       if (this.score.score > bestScore) {
         sessionStorage.setItem('best-snake-score', this.score.score);
-
-        alert(`Best Score: ${this.score.score}`);
       }
 
-      location.reload();
+      // TODO call from menu
+      this.reset();
 
       return;
     }
@@ -81,11 +83,38 @@ export default class SnakeGame extends UIElement {
 
   draw() {}
 
+  foodToCell(container, food) {
+    return new FieldCell(container, food.position, food.size, Colors.RED);
+  }
+
   handleMove(directions) {
     this.snake.setHeadDirection(directions);
   }
 
+  reset() {
+    this.state = GameStates.READY;
+
+    // TODO avoid direct setting of score field
+    this.score.score = 0;
+
+    const { snake, food } = SnakeGame.createGameItems(this.field);
+
+    this.snake = snake;
+    this.food = food;
+  }
+
+  snakeToCells(container, snake) {
+    return snake.segments.map(
+      ({ position, size }) =>
+        new FieldCell(container, position, size, Colors.GREEN)
+    );
+  }
+
   update() {
+    if (this.state !== GameStates.READY) {
+      return;
+    }
+
     this.snake.move();
     this.checkRules();
 
@@ -100,17 +129,6 @@ export default class SnakeGame extends UIElement {
     this.score.update();
   }
 
-  foodToCell(container, food) {
-    return new FieldCell(container, food.position, food.size, Colors.RED);
-  }
-
-  snakeToCells(container, snake) {
-    return snake.segments.map(
-      ({ position, size }) =>
-        new FieldCell(container, position, size, Colors.GREEN)
-    );
-  }
-
   destroy() {
     super.destroy();
 
@@ -118,7 +136,14 @@ export default class SnakeGame extends UIElement {
     this.score.destroy();
   }
 
-  static buildGame({ container, position, width, height, tileSize, padding }) {
+  static createGameUI({
+    container,
+    position,
+    width,
+    height,
+    tileSize,
+    padding
+  }) {
     const totalPadding = padding * 2;
     const availableWidth = width - totalPadding;
     const availableHeight = height - totalPadding;
@@ -151,16 +176,21 @@ export default class SnakeGame extends UIElement {
       tileSize
     );
 
+    return {
+      score,
+      field
+    };
+  }
+
+  static createGameItems(field) {
     const headPosition = GameField.getCentralCellPosition(field);
     const foodPosition = GameField.getRandomCellPosition(field, [headPosition]);
 
-    const food = new Food(foodPosition, tileSize);
+    const food = new Food(foodPosition, field.tileSize);
 
-    const snake = new Snake(headPosition, tileSize, DEFAULT_GAME_SPEED);
+    const snake = new Snake(headPosition, field.tileSize, DEFAULT_GAME_SPEED);
 
     return {
-      score,
-      field,
       snake,
       food
     };
