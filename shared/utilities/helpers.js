@@ -1,5 +1,5 @@
 import { hasCollision } from './collision-resolver.js';
-import { Vector } from '../entities/index.js';
+import { Vector, Directions } from '../entities/index.js';
 
 const { floor, random } = Math;
 
@@ -83,4 +83,45 @@ export function getRandomCoordinates(particles, container, radius) {
   } while (hasInteractions);
 
   return hasAttempts ? position : null;
+}
+
+export function getSwipeDirection(initialTouch, currentTouch) {
+  if (initialTouch === null) {
+    return;
+  }
+
+  const { clientX: cx, clientY: cy } = currentTouch;
+  const { clientX: ix, clientY: iy } = initialTouch;
+
+  const diffX = ix - cx;
+  const diffY = iy - cy;
+
+  const isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+
+  return isHorizontalSwipe
+    ? diffX > 0
+      ? Directions.LEFT
+      : Directions.RIGHT
+    : diffY > 0
+    ? Directions.TOP
+    : Directions.BOTTOM;
+}
+
+export function getKeyDirection(keyCode) {
+  switch (keyCode) {
+    case 38:
+    case 87:
+      return Directions.TOP;
+    case 39:
+    case 68:
+      return Directions.RIGHT;
+    case 37:
+    case 65:
+      return Directions.LEFT;
+    case 40:
+    case 83:
+      return Directions.BOTTOM;
+    default:
+      return null;
+  }
 }

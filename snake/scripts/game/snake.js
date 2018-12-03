@@ -10,13 +10,17 @@ class SnakeSegment {
    * @param {number} size the size of one snake's segment (both width and height)
    * @param {Directions} direction the direction of the segment
    */
-  constructor(position, size, direction = Directions.TOP) {
+  constructor(position, size, direction = null) {
     this.direction = direction;
     this.position = position;
     this.size = size;
   }
 
   move(opposite = false) {
+    if (!this.direction) {
+      return;
+    }
+
     const step = !opposite ? this.size : -this.size;
 
     switch (this.direction) {

@@ -1,5 +1,34 @@
-import { Position, FPSCounter } from '../../shared/index.js';
+import {
+  Position,
+  FPSCounter,
+  getSwipeDirection,
+  getKeyDirection
+} from '../../shared/index.js';
 import { SnakeGame } from './game/index.js';
+
+document.addEventListener('touchstart', handleTouchStart);
+document.addEventListener('touchmove', handleTouchMove);
+
+let initialTouch = null;
+
+function handleTouchStart(event) {
+  const { clientX, clientY } = event.touches[0];
+
+  initialTouch = {
+    x: clientX,
+    y: clientY
+  };
+}
+
+function handleTouchMove(event) {
+  const direction = getSwipeDirection(initialTouch, event.touches[0]);
+
+  game.handleMove(direction);
+
+  initialTouch = null;
+
+  event.preventDefault();
+}
 
 let loaded = false;
 
@@ -23,7 +52,7 @@ function handleKey(keyCode) {
     toggleFPSCounter = !toggleFPSCounter;
   }
 
-  game.handleKey(keyCode);
+  game.handleMove(getKeyDirection(keyCode));
 }
 
 function expand() {

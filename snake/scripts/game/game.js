@@ -6,20 +6,25 @@ import GameScore from './score.js';
 import Snake from './snake.js';
 import Food from './food.js';
 
+const GameStates = Object.freeze({
+  PLAYING: Symbol('playing'),
+  PAUSED: Symbol('paused'),
+  READY: Symbol('ready'),
+  LOSS: Symbol('loss'),
+  WIN: Symbol('win')
+});
+
+const DEFAULT_GAME_SPEED = 5;
+
 export default class SnakeGame extends UIElement {
-  constructor(container, position, tileSize) {
+  constructor(container, position, tileSize, padding = 20) {
     const { width, height } = container;
 
     super(container, position, width, height);
 
-    const { score, field, snake, food } = SnakeGame.buildGame(
-      container,
-      position,
-      width,
-      height,
-      tileSize,
-      20
-    );
+    const buildArgs = { container, position, width, height, tileSize, padding };
+
+    const { score, field, snake, food } = SnakeGame.buildGame(buildArgs);
 
     this.score = score;
     this.field = field;
@@ -32,11 +37,6 @@ export default class SnakeGame extends UIElement {
       this.snake.canBeEaten(segment)
     );
 
-    if (selfCatched) {
-      alert('Game over!');
-      location.reload();
-    }
-
     const outOfField = this.snake.segments.some(
       segment =>
         !GameField.isWithinBoundaries(this.field, {
@@ -46,9 +46,20 @@ export default class SnakeGame extends UIElement {
         })
     );
 
-    if (outOfField) {
+    if (outOfField || selfCatched) {
+      // TODO implement game state
       alert('Game over!');
+      const bestScore = +sessionStorage.getItem('best-snake-score');
+
+      if (this.score.score > bestScore) {
+        sessionStorage.setItem('best-snake-score', this.score.score);
+
+        alert(`Best Score: ${this.score.score}`);
+      }
+
       location.reload();
+
+      return;
     }
 
     const catched = this.snake.canBeEaten(this.food);
@@ -70,32 +81,8 @@ export default class SnakeGame extends UIElement {
 
   draw() {}
 
-  handleKey(keyCode) {
-    switch (keyCode) {
-      case 38:
-      case 87:
-        this.snake.setHeadDirection(Directions.TOP);
-        break;
-      case 39:
-      case 68:
-        this.snake.setHeadDirection(Directions.RIGHT);
-        break;
-      case 37:
-      case 65:
-        this.snake.setHeadDirection(Directions.LEFT);
-        break;
-      case 40:
-      case 83:
-        this.snake.setHeadDirection(Directions.BOTTOM);
-        break;
-      case 13:
-        // TODO Remove
-        this.snake.eat(2);
-      default:
-        break;
-    }
-
-    return;
+  handleMove(directions) {
+    this.snake.setHeadDirection(directions);
   }
 
   update() {
@@ -131,7 +118,7 @@ export default class SnakeGame extends UIElement {
     this.score.destroy();
   }
 
-  static buildGame(container, position, width, height, tileSize, padding) {
+  static buildGame({ container, position, width, height, tileSize, padding }) {
     const totalPadding = padding * 2;
     const availableWidth = width - totalPadding;
     const availableHeight = height - totalPadding;
@@ -169,8 +156,7 @@ export default class SnakeGame extends UIElement {
 
     const food = new Food(foodPosition, tileSize);
 
-    // Increase snake's speed to 10 segments by second
-    const snake = new Snake(headPosition, tileSize, 10);
+    const snake = new Snake(headPosition, tileSize, DEFAULT_GAME_SPEED);
 
     return {
       score,
