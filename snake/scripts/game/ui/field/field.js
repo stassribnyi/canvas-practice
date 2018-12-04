@@ -3,7 +3,7 @@ import {
   UIElement,
   getRandomInt,
   drawRoundedRect
-} from '../../shared.js';
+} from '../../../../shared.js';
 
 export default class GameField extends UIElement {
   constructor(container, position, width, height, tileSize) {

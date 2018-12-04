@@ -1,4 +1,4 @@
-import { Position, Directions } from '../../shared.js';
+import { Position, Directions } from '../../../shared.js';
 
 const DEFAULT_SNAKES_SPEED = 1;
 const DEFAULT_SNAKES_FOOD_AMOUNT = 1;

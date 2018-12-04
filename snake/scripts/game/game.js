@@ -1,10 +1,7 @@
 import { Colors, Position, UIElement } from '../../shared.js';
 
-import FieldCell from './field-cell.js';
-import GameField from './field.js';
-import GameScore from './score.js';
-import Snake from './snake.js';
-import Food from './food.js';
+import { FieldCell, GameField, GameScore } from './ui/index.js';
+import { Snake, Food } from './items/index.js';
 
 const GameStates = Object.freeze({
   PLAYING: Symbol('playing'),

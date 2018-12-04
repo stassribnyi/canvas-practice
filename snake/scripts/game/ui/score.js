@@ -1,4 +1,4 @@
-import { TextLabel, TextAlignOptions } from '../../shared.js';
+import { TextLabel, TextAlignOptions } from '../../../shared.js';
 
 const getScoreText = score => `${score}`;
 const getBestScoreText = score => (score > 0 ? `Best - ${score}` : '');

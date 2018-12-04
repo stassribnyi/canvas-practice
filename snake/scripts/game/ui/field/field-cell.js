@@ -1,4 +1,4 @@
-import { UIElement, getDarkerRGBColor, drawRoundedRect } from '../../shared.js';
+import { UIElement, getDarkerRGBColor, drawRoundedRect } from '../../../../shared.js';
 
 export default class FieldCell extends UIElement {
   constructor(container, position, tileSize, color) {
