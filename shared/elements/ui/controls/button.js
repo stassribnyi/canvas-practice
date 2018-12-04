@@ -55,4 +55,15 @@ export default class Button extends ClickableUIElement {
 
     this.buttonLabel.update();
   }
+
+  static measureButton(context, text, padding = DEFAULT_BTN_PADDING) {
+    const { width, height } = ClickableUIElement.measureText(context, text);
+
+    const doublePadding = padding * 2;
+
+    return {
+      width: width + doublePadding,
+      height: height + doublePadding
+    };
+  }
 }
