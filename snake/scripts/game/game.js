@@ -1,6 +1,6 @@
 import { Colors, Position, UIElement } from '../../shared.js';
 
-import { FieldCell, GameField, GameScore } from './ui/index.js';
+import { FieldCell, GameField, GameScore, GameMenu } from './ui/index.js';
 import { Snake, Food } from './items/index.js';
 
 const GameStates = Object.freeze({
@@ -21,12 +21,15 @@ export default class SnakeGame extends UIElement {
 
     const buildArgs = { container, position, width, height, tileSize, padding };
 
-    const { score, field } = SnakeGame.createGameUI(buildArgs);
+    const { score, field, menu } = SnakeGame.createGameUI(buildArgs);
     const { snake, food } = SnakeGame.createGameItems(field);
 
     this.state = GameStates.READY;
+
     this.score = score;
     this.field = field;
+    this.menu = menu;
+
     this.snake = snake;
     this.food = food;
   }
@@ -117,6 +120,9 @@ export default class SnakeGame extends UIElement {
     this.draw();
     this.field.update(cells);
     this.score.update();
+
+    // TODO remove
+    this.menu.update();
   }
 
   destroy() {
@@ -166,9 +172,17 @@ export default class SnakeGame extends UIElement {
       tileSize
     );
 
+    const menu = new GameMenu(
+      container,
+      fieldPosition,
+      field.width,
+      field.height
+    );
+
     return {
       score,
-      field
+      field,
+      menu
     };
   }
 

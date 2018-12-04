@@ -126,18 +126,30 @@ export function getKeyDirection(keyCode) {
   }
 }
 
-export function getDarkerRGBColor(input, percent) {
-  const split = input
+function parseColorAsRGB(rgb) {
+  const split = rgb
     .split('(')[1]
     .split(')')[0]
     .split(',')
-    .map(number => (Number(number) || 0) * percent);
+    .map(number => Number(number) || 0);
 
   if (split.length === 3 || split.length === 4) {
-    const isRgba = split.length === 4;
-
-    return `${isRgba ? 'rgba' : 'rgb'}(${split[0]}, ${split[1]}, ${split[2]})`;
+    return split;
   }
 
-  return 'rgb(0, 0, 0)';
+  return [0, 0, 0];
+}
+
+export function getDarkerRGBColor(input, percent) {
+  const parsed = parseColorAsRGB(input).map(n => n * percent);
+
+  const isRgba = parsed.length === 4;
+
+  return `${isRgba ? 'rgba' : 'rgb'}(${parsed[0]}, ${parsed[1]}, ${parsed[2]})`;
+}
+
+export function getRGBAFromRGBColor(rgb, transparency) {
+  const parsed = parseColorAsRGB(rgb);
+
+  return `rgba(${parsed[0]}, ${parsed[1]}, ${parsed[2]}, ${transparency})`;
 }
