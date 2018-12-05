@@ -28,7 +28,7 @@ export default class SnakeGame extends UIElement {
     super(container, position, width, height);
 
     const menuItems = [
-      new MenuItem('Scores', MenuItemTypes.TEXT),
+      new MenuItem(`Snake's Menu`, MenuItemTypes.TEXT),
       new MenuItem('New Game', MenuItemTypes.BUTTON, () => this.reset()),
       new MenuItem('Resume', MenuItemTypes.BUTTON, () => this.toggleMenu())
     ];
@@ -62,43 +62,46 @@ export default class SnakeGame extends UIElement {
   }
 
   checkRules() {
-    const caughtSelf = this.snake.segments.some(segment =>
-      this.snake.canBeEaten(segment)
-    );
+    const isGameOver = this.snake.segments.some(segment => {
+      const segmentWillBeEaten = this.snake.canBeEaten(segment);
+      const boundariesWasViolated = !GameField.isWithinBoundaries(this.field, {
+        position: segment.position,
+        width: segment.size,
+        height: segment.size
+      });
 
-    const outOfField = this.snake.segments.some(
-      segment =>
-        !GameField.isWithinBoundaries(this.field, {
-          position: segment.position,
-          width: segment.size,
-          height: segment.size
-        })
-    );
+      return segmentWillBeEaten || boundariesWasViolated;
+    });
 
-    if (outOfField || caughtSelf) {
+    if (isGameOver) {
       this.state = GameStates.LOSS;
-
-      // TODO call from menu
-      this.reset();
 
       return;
     }
 
     const caught = this.snake.canBeEaten(this.food);
 
-    if (caught) {
-      this.snake.eat();
-
-      const segmentsPositions = this.snake.segments.map(x => x.position);
-      const newFoodPosition = GameField.getRandomCellPosition(
-        this.field,
-        segmentsPositions
-      );
-
-      this.food = this.food.clone(newFoodPosition);
-
-      this.score.increment();
+    if (!caught) {
+      return;
     }
+
+    this.snake.eat();
+
+    const segmentsPositions = this.snake.segments.map(x => x.position);
+    const newFoodPosition = GameField.getRandomCellPosition(
+      this.field,
+      segmentsPositions
+    );
+
+    if (!newFoodPosition) {
+      this.state = GameStates.WIN;
+
+      return;
+    }
+
+    this.food = this.food.clone(newFoodPosition);
+
+    this.score.increment();
   }
 
   draw() {}
@@ -117,9 +120,7 @@ export default class SnakeGame extends UIElement {
 
   reset() {
     this.state = GameStates.READY;
-
-    // TODO avoid direct setting of score field
-    this.score.score = 0;
+    this.score.resetScore();
 
     const { snake, food } = SnakeGame.createGameItems(this.field);
 

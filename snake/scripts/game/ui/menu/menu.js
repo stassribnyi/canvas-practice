@@ -71,7 +71,7 @@ export default class GameMenu extends UIElement {
 
       const verticalPosition = !previousItem
         ? position.y
-        : previousItem.position.y + current.size.height;
+        : previousItem.position.y + previousItem.height;
 
       const itemPosition = new Position(
         horizontalPosition,
@@ -123,7 +123,7 @@ export default class GameMenu extends UIElement {
 
   measureBoundaries(menuItems, margin) {
     const measuredItems = menuItems.map(item => {
-      const size = Button.measureButton(this.context, item.labelText);
+      const size = GameMenu.measureItemSize(this.context, item);
 
       return {
         size,
@@ -170,5 +170,16 @@ export default class GameMenu extends UIElement {
     this.draw();
 
     this.items.forEach(i => i.update());
+  }
+
+  static measureItemSize(context, item) {
+    switch (item.type) {
+      case MenuItemTypes.BUTTON: {
+        return Button.measureButton(context, item.labelText);
+      }
+      case MenuItemTypes.TEXT:
+      default:
+        return TextLabel.measureText(context, item.labelText);
+    }
   }
 }

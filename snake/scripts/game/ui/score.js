@@ -1,9 +1,6 @@
 import { TextLabel, TextAlignOptions } from '../../../shared.js';
 
-const getScoreText = score => `${score}`;
-const getBestScoreText = score => (score > 0 ? `Best - ${score}` : '');
-
-const bestScoreKey = 'best-snake-score';
+const getScoreText = score => `Score: ${score}`;
 
 export default class GameScore extends TextLabel {
   constructor(container, position, initialScore = 0) {
@@ -17,14 +14,8 @@ export default class GameScore extends TextLabel {
     this.score = initialScore;
   }
 
-  get bestScore() {
-    const bestScore = Number(localStorage.getItem(bestScoreKey));
-
-    return bestScore || 0;
-  }
-
-  set bestScore(score) {
-    localStorage.setItem(bestScoreKey, score);
+  decrement() {
+    this.score--;
   }
 
   increment() {
@@ -34,9 +25,12 @@ export default class GameScore extends TextLabel {
       this.bestScore = this.score;
     }
   }
+  getCurrentScore() {
+    return this.score;
+  }
 
-  decrement() {
-    this.score--;
+  resetScore() {
+    this.score = 0;
   }
 
   update(score) {
@@ -44,13 +38,6 @@ export default class GameScore extends TextLabel {
       this.score = score;
     }
 
-    const bestScoreText = getBestScoreText(this.bestScore);
-    const scoreText = getScoreText(this.score);
-
-    const allScoresText = !bestScoreText
-      ? scoreText
-      : `${scoreText} | ${bestScoreText}`;
-
-    super.update(`Score - ${allScoresText}`);
+    super.update(getScoreText(this.score));
   }
 }
