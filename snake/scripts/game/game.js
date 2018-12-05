@@ -1,4 +1,4 @@
-import { Colors, Position, UIElement } from '../../shared.js';
+import { Colors, Position, UIElement, Button } from '../../shared.js';
 
 import {
   FieldCell,
@@ -29,7 +29,9 @@ export default class SnakeGame extends UIElement {
 
     const buildArgs = { container, position, width, height, tileSize, padding };
 
-    const { score, field, menu } = SnakeGame.createGameUI(buildArgs);
+    const { score, field, menu, menuButton } = SnakeGame.createGameUI(
+      buildArgs
+    );
     const { snake, food } = SnakeGame.createGameItems(field);
 
     this.state = GameStates.READY;
@@ -37,6 +39,7 @@ export default class SnakeGame extends UIElement {
     this.score = score;
     this.field = field;
     this.menu = menu;
+    this.menuButton = menuButton;
 
     this.snake = snake;
     this.food = food;
@@ -131,6 +134,7 @@ export default class SnakeGame extends UIElement {
 
     // TODO remove
     this.menu.update();
+    this.menuButton.update();
   }
 
   destroy() {
@@ -159,24 +163,31 @@ export default class SnakeGame extends UIElement {
       tileSize
     );
 
+    const menuButton = new Button(container, contentPosition, 'Menu');
+
+    const scorePosition = new Position(
+      contentPosition.x,
+      contentPosition.y + menuButton.height / 2
+    );
+
     const score = SnakeGame.createScore(
       container,
-      contentPosition,
+      scorePosition,
       fieldTakenWidth
     );
 
-    const scoreTakenHeight = score.height * 2;
+    const menuTakenHeight = menuButton.height * 1.5;
 
     const fieldPosition = new Position(
       contentPosition.x,
-      contentPosition.y + scoreTakenHeight
+      contentPosition.y + menuTakenHeight
     );
 
     const field = SnakeGame.createField(
       container,
       fieldPosition,
       availableWidth,
-      availableHeight - scoreTakenHeight,
+      availableHeight - menuTakenHeight,
       tileSize
     );
 
@@ -186,6 +197,7 @@ export default class SnakeGame extends UIElement {
       field.width,
       field.height,
       [
+        new MenuItem('Scores', MenuItemTypes.TEXT),
         new MenuItem('Restart', MenuItemTypes.BUTTON),
         new MenuItem('New Game', MenuItemTypes.BUTTON),
         new MenuItem('Resume', MenuItemTypes.BUTTON)
@@ -193,6 +205,7 @@ export default class SnakeGame extends UIElement {
     );
 
     return {
+      menuButton,
       score,
       field,
       menu
