@@ -20,7 +20,7 @@ const GameStates = Object.freeze({
   WIN: Symbol('win')
 });
 
-const DEFAULT_GAME_SPEED = 10;
+const DEFAULT_GAME_SPEED = 15;
 
 export default class SnakeGame extends UIElement {
   constructor(container, position, tileSize, padding = 20) {
@@ -30,8 +30,12 @@ export default class SnakeGame extends UIElement {
 
     const menuItems = [
       new MenuItem(`Snake's Menu`, MenuItemTypes.TEXT),
-      new MenuItem('New Game', MenuItemTypes.BUTTON, () => this.reset()),
-      new MenuItem('Resume', MenuItemTypes.BUTTON, () => this.toggleMenu())
+      new MenuItem('New Game', MenuItemTypes.BUTTON, () =>
+        this.callMenuAction(() => this.reset())
+      ),
+      new MenuItem('Resume', MenuItemTypes.BUTTON, () =>
+        this.callMenuAction(() => this.toggleMenu())
+      )
     ];
 
     const buildArgs = {
@@ -60,6 +64,14 @@ export default class SnakeGame extends UIElement {
     this.food = food;
 
     this.menuButton.addEventListener('click', () => this.toggleMenu());
+  }
+
+  callMenuAction(action) {
+    if (this.state !== GameStates.PAUSED) {
+      return;
+    }
+
+    action();
   }
 
   checkRules() {

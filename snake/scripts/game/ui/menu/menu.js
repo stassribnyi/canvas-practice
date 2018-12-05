@@ -173,6 +173,12 @@ export default class GameMenu extends UIElement {
     this.context.strokeStyle = oldStrokeStyle;
   }
 
+  destroy() {
+    super.destroy();
+
+    this.items.forEach(i => i.destroy());
+  }
+
   update() {
     this.draw();
 

@@ -56,7 +56,7 @@ export default class GameField extends UIElement {
       return null;
     }
 
-    const cellIndex = getRandomInt(0, availableCells.length);
+    const cellIndex = getRandomInt(0, availableCells.length - 1);
     const cell = availableCells[cellIndex];
 
     const xPosition = cell.x * field.tileSize;

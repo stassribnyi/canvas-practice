@@ -64,6 +64,8 @@ export default class Snake {
     this.speed = speed;
 
     this.prevTime = new Date().getTime();
+    this.upcomingDirection = null;
+    this.upcomingSegments = 0;
   }
 
   canBeEaten(food) {
@@ -76,23 +78,26 @@ export default class Snake {
   }
 
   eat(amount = DEFAULT_SNAKES_FOOD_AMOUNT) {
-    for (let i = 0; i < amount; i++) {
-      const lastSegment = this.segments[this.segments.length - 1];
-      const newSegment = lastSegment.clone();
-      newSegment.move(true);
-
-      this.segments.push(newSegment);
-    }
+    this.upcomingSegments += amount;
   }
 
-  moveSegments() {
-    if (this.segments.length === 1) {
-      this.segments[0].move();
+  moveSegments(direction) {
+    const head = this.segments[0];
 
-      return;
+    head.direction = direction;
+
+    const snakeTailIndex = this.segments.length - 1;
+
+    if (this.upcomingSegments > 0) {
+      const snakeTail = this.segments[snakeTailIndex];
+      const newTail = snakeTail.clone();
+
+      this.segments.push(newTail);
+
+      this.upcomingSegments--;
     }
 
-    for (let i = this.segments.length - 1; i >= 0; i--) {
+    for (let i = snakeTailIndex; i >= 0; i--) {
       const current = this.segments[i];
 
       current.move();
@@ -119,7 +124,7 @@ export default class Snake {
     }
 
     this.prevTime = currentTime;
-    this.moveSegments();
+    this.moveSegments(this.upcomingDirection);
   }
 
   canSetDirection(newDirection, oldDirection) {
@@ -143,6 +148,6 @@ export default class Snake {
       return;
     }
 
-    head.direction = direction;
+    this.upcomingDirection = direction;
   }
 }
