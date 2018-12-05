@@ -36,6 +36,12 @@ function handleKeyDown({ keyCode }) {
     toggleFPSCounter = !toggleFPSCounter;
   }
 
+  if (keyCode === 27) {
+    game.toggleMenu();
+
+    return;
+  }
+
   game.handleMove(getKeyDirection(keyCode));
 }
 

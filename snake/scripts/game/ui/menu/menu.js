@@ -94,7 +94,10 @@ export default class GameMenu extends UIElement {
     switch (item.type) {
       case MenuItemTypes.BUTTON: {
         const button = new Button(container, position, item.labelText);
-        button.addEventListener('click', item.callback);
+
+        if (!!item.callback) {
+          button.addEventListener('click', item.callback);
+        }
 
         return button;
       }

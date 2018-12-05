@@ -43,6 +43,8 @@ export default class SnakeGame extends UIElement {
 
     this.snake = snake;
     this.food = food;
+
+    this.menuButton.addEventListener('click', () => this.toggleMenu());
   }
 
   checkRules() {
@@ -92,6 +94,10 @@ export default class SnakeGame extends UIElement {
   }
 
   handleMove(directions) {
+    if (this.state !== GameStates.READY && this.state !== GameStates.PLAYING) {
+      return;
+    }
+
     this.snake.setHeadDirection(directions);
   }
 
@@ -114,13 +120,16 @@ export default class SnakeGame extends UIElement {
     );
   }
 
-  update() {
-    if (this.state !== GameStates.READY) {
-      return;
-    }
+  toggleMenu() {
+    this.state =
+      this.state === GameStates.PAUSED ? GameStates.PLAYING : GameStates.PAUSED;
+  }
 
-    this.snake.move();
-    this.checkRules();
+  update() {
+    if (this.state === GameStates.PLAYING || this.state === GameStates.READY) {
+      this.snake.move();
+      this.checkRules();
+    }
 
     const snakeCells = this.snakeToCells(this.container, this.snake);
 
@@ -131,10 +140,11 @@ export default class SnakeGame extends UIElement {
     this.draw();
     this.field.update(cells);
     this.score.update();
-
-    // TODO remove
-    this.menu.update();
     this.menuButton.update();
+
+    if (this.state === GameStates.PAUSED) {
+      this.menu.update();
+    }
   }
 
   destroy() {
