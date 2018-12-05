@@ -105,6 +105,15 @@ export default class SnakeGame extends UIElement {
     this.score.increment();
   }
 
+  cleanupGameOver() {
+    if (!this.gameOver) {
+      return;
+    }
+
+    this.gameOver.destroy();
+    this.gameOver = null;
+  }
+
   draw() {}
 
   foodToCell(container, food) {
@@ -122,9 +131,7 @@ export default class SnakeGame extends UIElement {
   reset() {
     this.state = GameStates.READY;
     this.score.resetScore();
-
-    this.gameOver.destroy();
-    this.gameOver = null;
+    this.cleanupGameOver();
 
     const { snake, food } = SnakeGame.createGameItems(this.field);
 
@@ -162,8 +169,8 @@ export default class SnakeGame extends UIElement {
 
     this.draw();
     this.field.update(cells);
-    this.score.update();
     this.menuButton.update();
+    this.score.update();
 
     if (this.state === GameStates.PAUSED) {
       this.menu.update();
@@ -208,6 +215,8 @@ export default class SnakeGame extends UIElement {
     this.field.destroy();
     this.score.destroy();
     this.menu.destroy();
+
+    this.cleanupGameOver();
   }
 
   static createGameUI({
