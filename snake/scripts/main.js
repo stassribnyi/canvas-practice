@@ -78,21 +78,21 @@ function handleTouchMove(event) {
 }
 
 function expand() {
-  // let reset = false;
+  let reset = false;
 
-  // if (!isResizeConfirmOpened) {
-  //   isResizeConfirmOpened = true;
+  if (!isResizeConfirmOpened) {
+    isResizeConfirmOpened = true;
 
-  //   reset = confirm(
-  //     'You have just changed size of the screen, do you wanna resize game field? If yes, current game will be lost!'
-  //   );
+    reset = confirm(
+      'You have just changed size of the screen, do you wanna resize game field? If yes, current game will be lost!'
+    );
 
-  //   isResizeConfirmOpened = false;
-  // }
+    isResizeConfirmOpened = false;
+  }
 
-  // if (!loaded || !reset) {
-  //   return;
-  // }
+  if (!loaded || !reset) {
+    return;
+  }
 
   init();
 }
