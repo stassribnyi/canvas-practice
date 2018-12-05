@@ -38,6 +38,7 @@ export default class GameMenu extends UIElement {
       padding
     );
 
+    this.padding = padding;
     this.width = totalWidth;
     this.height = totalHeight;
 
@@ -102,7 +103,13 @@ export default class GameMenu extends UIElement {
         return button;
       }
       case MenuItemTypes.TEXT:
-        return new TextLabel(container, position, item.labelText);
+        return new TextLabel(
+          container,
+          position,
+          item.labelText,
+          null,
+          item.foregroundColor
+        );
       default:
         null;
     }

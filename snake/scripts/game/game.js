@@ -1,11 +1,12 @@
 import { Colors, Position, UIElement, Button } from '../../shared.js';
 
 import {
+  GameMenu,
+  MenuItem,
   FieldCell,
   GameField,
   GameScore,
-  GameMenu,
-  MenuItem,
+  GameOverMenu,
   MenuItemTypes
 } from './ui/index.js';
 
@@ -43,17 +44,17 @@ export default class SnakeGame extends UIElement {
       padding
     };
 
-    const { score, field, menu, menuButton } = SnakeGame.createGameUI(
+    const { menuButton, score, field, menu } = SnakeGame.createGameUI(
       buildArgs
     );
     const { snake, food } = SnakeGame.createGameItems(field);
 
     this.state = GameStates.READY;
 
+    this.menuButton = menuButton;
     this.score = score;
     this.field = field;
     this.menu = menu;
-    this.menuButton = menuButton;
 
     this.snake = snake;
     this.food = food;
@@ -122,6 +123,9 @@ export default class SnakeGame extends UIElement {
     this.state = GameStates.READY;
     this.score.resetScore();
 
+    this.gameOver.destroy();
+    this.gameOver = null;
+
     const { snake, food } = SnakeGame.createGameItems(this.field);
 
     this.snake = snake;
@@ -136,6 +140,10 @@ export default class SnakeGame extends UIElement {
   }
 
   toggleMenu() {
+    if (this.state === GameStates.WIN || this.state === GameStates.LOSS) {
+      return;
+    }
+
     this.state =
       this.state === GameStates.PAUSED ? GameStates.PLAYING : GameStates.PAUSED;
   }
@@ -160,6 +168,37 @@ export default class SnakeGame extends UIElement {
     if (this.state === GameStates.PAUSED) {
       this.menu.update();
     }
+
+    if (this.state === GameStates.WIN || this.state === GameStates.LOSS) {
+      this.updateGameOver(this.state === GameStates.WIN);
+    }
+  }
+
+  updateGameOver(victoryAchieved) {
+    if (!!this.gameOver) {
+      this.gameOver.update();
+
+      return;
+    }
+
+    const bestScoreKey = 'snake-best-score';
+    const currentScore = this.score.getCurrentScore();
+    const bestScore = sessionStorage.getItem(bestScoreKey) || 0;
+
+    if (currentScore > bestScore) {
+      sessionStorage.setItem(bestScoreKey, currentScore);
+    }
+
+    this.gameOver = new GameOverMenu(
+      this.field.container,
+      this.field.position,
+      this.field.width,
+      this.field.height,
+      victoryAchieved,
+      currentScore,
+      bestScore,
+      () => this.reset()
+    );
   }
 
   destroy() {
