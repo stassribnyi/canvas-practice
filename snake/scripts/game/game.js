@@ -1,6 +1,14 @@
 import { Colors, Position, UIElement } from '../../shared.js';
 
-import { FieldCell, GameField, GameScore, GameMenu } from './ui/index.js';
+import {
+  FieldCell,
+  GameField,
+  GameScore,
+  GameMenu,
+  MenuItem,
+  MenuItemTypes
+} from './ui/index.js';
+
 import { Snake, Food } from './items/index.js';
 
 const GameStates = Object.freeze({
@@ -176,7 +184,12 @@ export default class SnakeGame extends UIElement {
       container,
       fieldPosition,
       field.width,
-      field.height
+      field.height,
+      [
+        new MenuItem('Restart', MenuItemTypes.BUTTON),
+        new MenuItem('New Game', MenuItemTypes.BUTTON),
+        new MenuItem('Resume', MenuItemTypes.BUTTON)
+      ]
     );
 
     return {

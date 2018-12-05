@@ -6,22 +6,12 @@ import {
   UIElement,
   drawRoundedRect,
   getRGBAFromRGBColor
-} from '../../../shared.js';
+} from '../../../../shared.js';
+
+import MenuItemTypes from './item-types.js';
+import MenuItem from './item.js';
 
 const DEFAULT_MENU_PADDING = 15;
-
-const MenuItemTypes = Object.freeze({
-  BUTTON: Symbol('button'),
-  TEXT: Symbol('text')
-});
-
-export class MenuItem {
-  constructor(labelText, type, callback = null) {
-    this.callback = callback;
-    this.labelText = labelText;
-    this.type = type;
-  }
-}
 
 export default class GameMenu extends UIElement {
   constructor(
@@ -29,16 +19,19 @@ export default class GameMenu extends UIElement {
     position,
     width,
     height,
+    menuItems,
     padding = DEFAULT_MENU_PADDING
   ) {
     super(container, null, null, null);
 
-    // stub items
-    const menuItems = [
-      new MenuItem('Restart', MenuItemTypes.BUTTON),
-      new MenuItem('New Game', MenuItemTypes.BUTTON),
-      new MenuItem('Resume', MenuItemTypes.BUTTON)
-    ];
+    if (
+      !(
+        menuItems instanceof Array &&
+        menuItems.some(item => item instanceof MenuItem)
+      )
+    ) {
+      throw new Error('Menu items can only be an array of MenuItem elements!');
+    }
 
     const { totalWidth, totalHeight, measuredItems } = this.measureBoundaries(
       menuItems,
