@@ -2,6 +2,7 @@
 
 canvas {
   display: block;
+  outline: none;
 }
 
 .settings-icon {
@@ -34,6 +35,12 @@ canvas {
   width: 300px;
 
   box-shadow: 3px 3px #ffeac980;
+}
+
+@media (max-width: 320px) {
+  .settings-modal {
+    width: 274px;
+  }
 }
 
 .settings-modal::before {

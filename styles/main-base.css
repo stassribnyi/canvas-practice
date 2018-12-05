@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'PressStart2P';
-  src: url(../assets/fonts/PressStart2P.ttf) format('truetype');
+  font-family: 'November';
+  src: url(../assets/fonts/november.regular.ttf) format('truetype');
 }
 
 html,
@@ -11,9 +11,9 @@ body {
   height: 100%;
 
   color: #ffeac9;
-  font-size: 12px;
+  font-size: 18px;
   line-height: 1.5;
-  font-family: 'PressStart2P', Verdana, Tahoma;
+  font-family: 'November', Impact, Tahoma;
 }
 
 body {

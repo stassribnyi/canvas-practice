@@ -1,4 +1,4 @@
-import { Container, FPSCounter, Vector } from '../shared.js';
+import { Container, FPSCounter, Vector, DEFAULT_FONT } from '../shared.js';
 
 import { TicTacToeGame } from './game/game.js';
 
@@ -30,7 +30,7 @@ function initialize() {
   const start = Vector.subtract(container.center, fieldLength / 2);
 
   game = new TicTacToeGame(context, start, fieldSize, cellSize);
-  fpsCounter = new FPSCounter(context);
+  fpsCounter = new FPSCounter(canvas);
 }
 
 function clicked(x, y) {
@@ -54,7 +54,7 @@ function animate() {
   requestAnimationFrame(animate);
 
   context.clearRect(0, 0, container.width, container.height);
-  context.font = '12px PressStart2P';
+  context.font = DEFAULT_FONT;
 
   game.update();
   fpsCounter.update();

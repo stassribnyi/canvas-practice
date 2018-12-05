@@ -1,5 +1,6 @@
 import {
   applyGravity,
+  DEFAULT_FONT,
   setRangeElement,
   getRandomArbitrary,
   getRandomCoordinates
@@ -117,7 +118,7 @@ function initialize() {
     particles.push(new Particle(context, position, new Vector(0, 0), radius));
   }
 
-  fpsCounter = new FPSCounter(context);
+  fpsCounter = new FPSCounter(canvas);
 }
 
 function animate() {
@@ -127,7 +128,7 @@ function animate() {
     return;
   }
 
-  context.font = '12px PressStart2P';
+  context.font = DEFAULT_FONT;
   context.fillStyle = 'rgba(40,44,62, 0.25)';
   context.fillRect(0, 0, container.width, container.height);
 

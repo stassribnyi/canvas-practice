@@ -23,7 +23,6 @@ let canvas = null;
 let context = null;
 let fpsCounter = null;
 let initialTouch = null;
-let toggleFPSCounter = false;
 
 let isResizeConfirmOpened = false;
 
@@ -32,17 +31,19 @@ function handleKeyDown({ keyCode }) {
     return;
   }
 
-  if (keyCode === 70) {
-    toggleFPSCounter = !toggleFPSCounter;
-  }
-
   if (keyCode === 27) {
     game.toggleMenu();
 
     return;
   }
 
-  game.handleMove(getKeyDirection(keyCode));
+  const direction = getKeyDirection(keyCode);
+
+  if (!direction) {
+    return;
+  }
+
+  game.handleMove(direction);
 }
 
 function handleTouchStart(event) {
@@ -103,11 +104,11 @@ function init() {
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  context.font = '14px PressStart2P';
+  context.font = '24px November';
 
   context.lineWidth = 2;
 
-  fpsCounter = new FPSCounter(context);
+  fpsCounter = new FPSCounter(canvas);
   game = new SnakeGame(canvas, new Position(0, 0), 20);
 }
 
@@ -123,9 +124,7 @@ function animate() {
 
   game.update();
 
-  if (toggleFPSCounter) {
-    fpsCounter.update();
-  }
+  fpsCounter.update();
 }
 
 animate();

@@ -1,12 +1,38 @@
-export class FPSCounter {
-  constructor(context) {
-    this.context = context;
+import { Colors, TextAlignOptions } from '../constants/index.js';
+import { Position } from '../entities/index.js';
+import { TextLabel } from './ui/index.js';
+
+export class FPSCounter extends TextLabel {
+  constructor(container) {
+    super(
+      container,
+      new Position(container.width / 2, 10),
+      '',
+      TextAlignOptions.CENTER,
+      Colors.FOREGROUND
+    );
+
     this.prevTime = new Date().getTime();
     this.framesPerSecond = 0;
+    this.visible = false;
     this.counter = 0;
+
+    this.toggle = this.toggle.bind(this);
+
+    this.container.addEventListener('keydown', this.toggle);
   }
 
-  draw() {
+  toggle({ keyCode }) {
+    console.log('test');
+
+    if (keyCode !== 70) {
+      return;
+    }
+
+    this.visible = !this.visible;
+  }
+
+  update() {
     const currentTime = new Date().getTime();
     const millisecondsInSecond = 1000;
 
@@ -18,14 +44,16 @@ export class FPSCounter {
       this.counter++;
     }
 
-    this.context.fillStyle = 'rgba(40, 44, 62, 0.63)';
-    this.context.fillRect(24, 10, 85, 26);
+    if (!this.visible) {
+      return;
+    }
 
-    this.context.fillStyle = '#ffeac9';
-    this.context.fillText(`${this.framesPerSecond} FPS`, 30, 30);
+    super.update(`${this.framesPerSecond} FPS`);
   }
 
-  update() {
-    this.draw();
+  destroy() {
+    super.destroy();
+
+    this.container.removeEventListener('keydown', this.toggle);
   }
 }

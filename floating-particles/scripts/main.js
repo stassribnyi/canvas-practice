@@ -1,4 +1,4 @@
-import { setRangeElement } from '../shared.js';
+import { setRangeElement, DEFAULT_FONT } from '../shared.js';
 
 import { Range, Vector, Particle, Container, FPSCounter } from '../shared.js';
 
@@ -153,7 +153,7 @@ function initialize() {
     particles.push(new Particle(context, position, velocity, radius));
   }
 
-  fpsCounter = new FPSCounter(context);
+  fpsCounter = new FPSCounter(canvas);
 }
 
 function processParticles(particles, particle) {
@@ -184,7 +184,7 @@ function animate() {
   }
 
   context.clearRect(0, 0, container.width, container.height);
-  context.font = '12px PressStart2P';
+  context.font = DEFAULT_FONT;
 
   particles.forEach(p => processParticles(particles, p));
   fpsCounter.update();
