@@ -1,11 +1,8 @@
-import { Colors, TextLabel } from '../../../../shared.js';
+import { Colors } from '../../../../shared.js';
+
 import MenuItemTypes from './item-types.js';
 import MenuItem from './item.js';
 import GameMenu from './menu.js';
-
-const SCORE_PLACEHOLDER = 'Your Score: 0';
-const BEST_SCORE_PLACEHOLDER = 'Best Score: 0';
-const GAME_OVER_REASON_PLACEHOLDER = 'Game Over!';
 
 export default class GameOverMenu extends GameMenu {
   constructor(
@@ -41,21 +38,5 @@ export default class GameOverMenu extends GameMenu {
     ];
 
     super(container, position, width, height, menuItems);
-  }
-
-  updateIfPossible(placeholder, value, color = null) {
-    const itemToUpdate = this.items.find(
-      item => item.labelText === placeholder
-    );
-
-    if (!itemToUpdate) {
-      return;
-    }
-
-    if (itemToUpdate instanceof TextLabel && !!color) {
-      itemToUpdate.foregroundColor = color;
-    }
-
-    itemToUpdate.update(value);
   }
 }
