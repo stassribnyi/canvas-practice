@@ -27,7 +27,21 @@ export default class SnakeGame extends UIElement {
 
     super(container, position, width, height);
 
-    const buildArgs = { container, position, width, height, tileSize, padding };
+    const menuItems = [
+      new MenuItem('Scores', MenuItemTypes.TEXT),
+      new MenuItem('New Game', MenuItemTypes.BUTTON, () => this.reset()),
+      new MenuItem('Resume', MenuItemTypes.BUTTON, () => this.toggleMenu())
+    ];
+
+    const buildArgs = {
+      container,
+      position,
+      width,
+      height,
+      menuItems,
+      tileSize,
+      padding
+    };
 
     const { score, field, menu, menuButton } = SnakeGame.createGameUI(
       buildArgs
@@ -150,8 +164,10 @@ export default class SnakeGame extends UIElement {
   destroy() {
     super.destroy();
 
+    this.menuButton.destroy();
     this.field.destroy();
     this.score.destroy();
+    this.menu.destroy();
   }
 
   static createGameUI({
@@ -159,6 +175,7 @@ export default class SnakeGame extends UIElement {
     position,
     width,
     height,
+    menuItems,
     tileSize,
     padding
   }) {
@@ -206,12 +223,7 @@ export default class SnakeGame extends UIElement {
       fieldPosition,
       field.width,
       field.height,
-      [
-        new MenuItem('Scores', MenuItemTypes.TEXT),
-        new MenuItem('Restart', MenuItemTypes.BUTTON),
-        new MenuItem('New Game', MenuItemTypes.BUTTON),
-        new MenuItem('Resume', MenuItemTypes.BUTTON)
-      ]
+      menuItems
     );
 
     return {
