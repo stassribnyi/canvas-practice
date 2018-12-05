@@ -36,55 +36,28 @@ export class TicTacToeGame {
   get letterLength() {
     return 6;
   }
-
-  get upperCaseFactor() {
-    return 2;
-  }
-
-  get letterHight() {
-    return this.letterLength * 2;
-  }
-
   buildControls() {
     this.resetControl = null;
     this.infoControl = null;
-    const resetLabel = 'RESET';
-
     const { x, y } = this.position;
+
     const length = this.cellSize * this.fieldSize;
-    const middle = length / 2;
+    const halfWidth = length / 2;
 
-    const stateWordLength = this.state.length * this.letterLength;
-    const resetWordLength =
-      resetLabel.length * this.letterLength * this.upperCaseFactor;
-
-    const stateShift = middle - this.state.length * this.letterLength;
-    const resetShift = middle - resetLabel.length * this.letterLength;
-
-    const infoPosition = new Vector(x + stateShift, y - this.context.lineWidth * 2);
+    const infoPosition = new Vector(
+      x + halfWidth,
+      y - this.context.lineWidth * 2 - 20
+    );
 
     const lineWidthShift = this.context.lineWidth * 4;
 
     const resetPosition = new Vector(
-      x + resetShift,
+      x + halfWidth,
       y + length + lineWidthShift
     );
 
-    this.resetControl = new TextControl(
-      this.context,
-      resetLabel,
-      resetPosition,
-      resetWordLength,
-      this.letterHight * this.upperCaseFactor
-    );
-
-    this.infoControl = new TextControl(
-      this.context,
-      this.state,
-      infoPosition,
-      stateWordLength,
-      this.letterHight
-    );
+    this.resetControl = new TextControl(this.context, resetPosition, 'RESET');
+    this.infoControl = new TextControl(this.context, infoPosition, this.state);
   }
 
   buildFieldLines() {
@@ -165,9 +138,8 @@ export class TicTacToeGame {
   }
 
   hoverCell(position) {
-    this.cells.forEach(
-      cell =>
-        this.canCellBeClicked(cell, position) ? cell.hoverIn() : cell.hoverOut()
+    this.cells.forEach(cell =>
+      this.canCellBeClicked(cell, position) ? cell.hoverIn() : cell.hoverOut()
     );
   }
 
