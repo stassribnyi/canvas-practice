@@ -141,7 +141,7 @@ function parseColorAsRGB(rgb) {
 }
 
 export function getDarkerRGBColor(input, percent) {
-  const parsed = parseColorAsRGB(input).map(n => n * percent);
+  const parsed = parseColorAsRGB(input).map(n => Math.round(n * percent));
 
   const isRgba = parsed.length === 4;
 
