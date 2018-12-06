@@ -145,7 +145,11 @@ export function getDarkerRGBColor(input, percent) {
 
   const isRgba = parsed.length === 4;
 
-  return `${isRgba ? 'rgba' : 'rgb'}(${parsed[0]}, ${parsed[1]}, ${parsed[2]})`;
+  if (isRgba) {
+    return `rgba(${parsed[0]}, ${parsed[1]}, ${parsed[2]}, ${parsed[3]})`;
+  }
+
+  return `rgb(${parsed[0]}, ${parsed[1]}, ${parsed[2]})`;
 }
 
 export function getRGBAFromRGBColor(rgb, transparency) {
