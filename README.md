@@ -1,4 +1,4 @@
-# Learning HTML5 Canvas
+# Practice HTML5 Canvas
 
 ## 0. Index
 [Demo](https://stassribnyi.github.io/canvas-learning/)
