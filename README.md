@@ -1,4 +1,4 @@
-# Practice HTML5 Canvas
+# HTML5 Canvas Playground
 
 ## 0. Index
 [Demo](https://stassribnyi.github.io/canvas-practice/)
