@@ -1,20 +1,11 @@
 # HTML5 Canvas Playground
 
-## 0. Index
-[Demo](https://stassribnyi.github.io/canvas-practice/)
+## Table of Contents <!-- TOC ignore:true -->
 
-## 1. Floating particles
-
-[Demo](https://stassribnyi.github.io/canvas-practice/floating-particles/)
-
-## 2. Gravity
-
-[Demo](https://stassribnyi.github.io/canvas-practice/gravity/)
-
-## 3. Tic-Tac-Toe
-
-[Demo](https://stassribnyi.github.io/canvas-practice/tic-tac-toe/)
-
-## 4. Snake
-
-[Demo](https://stassribnyi.github.io/canvas-practice/snake/)
+- [HTML5 Canvas Playground](#html5-vanvas-playground)
+  - [Table of Contents <!-- TOC ignore:true -->](#table-of-contents)
+  - [Index](https://stassribnyi.github.io/canvas-practice/)
+  - [Floating particles](https://stassribnyi.github.io/canvas-practice/floating-particles/)
+  - [Gravity](https://stassribnyi.github.io/canvas-practice/gravity/)
+  - [Tic-Tac-Toe](https://stassribnyi.github.io/canvas-practice/tic-tac-toe/)
+  - [Snake](https://stassribnyi.github.io/canvas-practice/snake/)
