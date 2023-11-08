@@ -3,7 +3,8 @@ import {
   DEFAULT_FONT,
   setRangeElement,
   getRandomArbitrary,
-  getRandomCoordinates
+  getRandomCoordinates,
+  setCanvasScaling
 } from '../shared.js';
 
 import {
@@ -102,8 +103,7 @@ function applySettings() {
 }
 
 function initialize() {
-  container.width = canvas.width = window.innerWidth;
-  container.height = canvas.height = window.innerHeight;
+  setCanvasScaling(container, canvas)
 
   particles = [];
 

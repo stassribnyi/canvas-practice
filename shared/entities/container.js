@@ -1,5 +1,6 @@
 import { Vector } from './vector.js';
 
+// TODO: this should probably be a wrapper over canvas/context
 export class Container {
   constructor(width = null, height = null) {
     this.width = width;

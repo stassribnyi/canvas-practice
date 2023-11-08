@@ -1,4 +1,4 @@
-import { Container, FPSCounter, Vector, DEFAULT_FONT } from '../shared.js';
+import { Container, FPSCounter, Vector, DEFAULT_FONT, setCanvasScaling } from '../shared.js';
 
 import { TicTacToeGame } from './game/game.js';
 
@@ -16,8 +16,7 @@ let fpsCounter = null;
 let game = null;
 
 function initialize() {
-  container.width = canvas.width = window.innerWidth;
-  container.height = canvas.height = window.innerHeight;
+  setCanvasScaling(container, canvas);
 
   const fieldSize = 3;
 

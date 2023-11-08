@@ -157,3 +157,19 @@ export function getRGBAFromRGBColor(rgb, transparency) {
 
   return `rgba(${parsed[0]}, ${parsed[1]}, ${parsed[2]}, ${transparency})`;
 }
+
+export function setCanvasScaling(container, canvas) {
+  const dpr = window.devicePixelRatio;
+  const context = canvas.getContext('2d');
+
+  container.width = window.innerWidth;
+  container.height = window.innerHeight;
+
+  canvas.width = container.width * dpr;
+  canvas.height = container.height * dpr;
+
+  canvas.style.width = `${container.width}px`;
+  canvas.style.height = `${container.height}px`;
+
+  context.scale(dpr, dpr);
+}

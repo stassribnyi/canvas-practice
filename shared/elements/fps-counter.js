@@ -2,6 +2,8 @@ import { Colors, TextAlignOptions } from '../constants/index.js';
 import { Position } from '../entities/index.js';
 import { TextLabel } from './ui/index.js';
 
+const F_KEY_CODE = 70;
+
 export class FPSCounter extends TextLabel {
   constructor(container) {
     super(
@@ -23,9 +25,7 @@ export class FPSCounter extends TextLabel {
   }
 
   toggle({ keyCode }) {
-    console.log('test');
-
-    if (keyCode !== 70) {
+    if (keyCode !== F_KEY_CODE) {
       return;
     }
 

@@ -20,7 +20,7 @@ const GameStates = Object.freeze({
   WIN: Symbol('win')
 });
 
-const DEFAULT_GAME_SPEED = 15;
+const DEFAULT_GAME_SPEED = 10;
 
 export default class SnakeGame extends UIElement {
   constructor(container, position, tileSize, padding = 20) {

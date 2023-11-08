@@ -3,7 +3,8 @@ import {
   Position,
   FPSCounter,
   getKeyDirection,
-  getSwipeDirection
+  getSwipeDirection,
+  DEFAULT_FONT,
 } from '../../shared/index.js';
 import { SnakeGame } from './game/index.js';
 
@@ -98,14 +99,15 @@ function expand() {
   init();
 }
 
+// TODO: update to use scaling
 function init() {
   canvas = document.querySelector('canvas');
   context = canvas.getContext('2d');
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  context.font = '24px November';
 
+  context.font = DEFAULT_FONT;
   context.lineWidth = 2;
 
   fpsCounter = new FPSCounter(canvas);

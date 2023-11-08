@@ -1,4 +1,4 @@
-import { setRangeElement, DEFAULT_FONT } from '../shared.js';
+import { setRangeElement, DEFAULT_FONT, setCanvasScaling } from '../shared.js';
 
 import { Range, Vector, Particle, Container, FPSCounter } from '../shared.js';
 
@@ -129,8 +129,8 @@ function applySettings() {
 }
 
 function initialize() {
-  container.width = canvas.width = window.innerWidth;
-  container.height = canvas.height = window.innerHeight;
+  setCanvasScaling(container, canvas)
+
   particles = [];
 
   for (let index = 0; index < amountOfParticles; index++) {
